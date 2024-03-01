@@ -118,15 +118,13 @@ auto process_penetration_depth_and_maintain_impact_set(
       new_contacts_ptr.push_back(&pair);
     } else {
       auto& contact_pair_value = contact_pair_map[{pair.id_A, pair.id_B}];
-      pair.depth -= contact_pair_value.init_penetration_depth_;
       if (pair.depth < 0) {
         // 更新记录的初始穿深
-        contact_pair_value.init_penetration_depth_ += pair.depth;
-        // 将穿深设置为0，受到重力
-        pair.depth = 0;
+        contact_pair_value.init_penetration_depth_ = pair.depth;
         // 记录为新的碰撞点
         // new_contacts_ptr.push_back(&pair);
       }
+      pair.depth -= contact_pair_value.init_penetration_depth_;
       // if (contact_pair_value.is_depth_smaller_than_init_depth_) {
       //   // 更新initial depth
       //   // 如果又开始接触，需要开始处理
@@ -337,6 +335,9 @@ auto InitHandler1::init(simulator::SimulatorBase* simulator) -> void {
 auto InitHandler1::handle(core::EventBase* e) -> bool {
   InitEvent1* event_ptr = dynamic_cast<InitEvent1*>(e);
   core::ContactPairManager* manager_ptr = simulator_ptr->contactPairManager();
+  simulator_ptr->timer().reset();
+  initLog();
+  logCurrentState(0, 1, simulator_ptr);
   process_penetration_depth_and_maintain_impact_set(simulator_ptr);
   // 之后就可以正常积分
 
