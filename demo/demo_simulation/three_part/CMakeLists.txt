@@ -1,4 +1,4 @@
-file(GLOB SOURCES *.hpp *.cpp)
+file(GLOB SOURCES *.h *.hpp *.cpp)
 set(sire_demo "demo_simulation_three_part")
 set(CONFIG_EXISTS ON)
 

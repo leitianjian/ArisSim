@@ -1,4 +1,4 @@
-file(GLOB SOURCES *.h *.cpp)
+file(GLOB SOURCES *.h *.hpp *.cpp)
 set(sire_demo "demo_middleware_collision")
 set(CONFIG_EXISTS ON)
 add_executable(${sire_demo} ${SOURCES})
