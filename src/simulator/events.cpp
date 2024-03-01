@@ -5,10 +5,12 @@
 #include <limits>
 #include <set>
 
+#include <aris/core/log.hpp>
 #include <aris/dynamic/model.hpp>
 #include <aris/dynamic/screw.hpp>
 
 #include "sire/core/event_manager.hpp"
+#include "sire/ext/json.hpp"
 #include "sire/physics/common/penetration_as_point_pair.hpp"
 
 namespace sire::simulator {
@@ -243,6 +245,30 @@ auto process_penetration_depth_and_maintain_impact_set(
   //             << vs[2] << " " << std::endl;
   // }
 }
+static std::fstream file;
+auto initLog() -> void {
+  auto file_name =
+      aris::core::defaultLogDirectory() /
+      ("state-log--" +
+       aris::core::logFileTimeFormat(std::chrono::system_clock::now()) + "--");
+  file.open(file_name.string() + ".txt", std::ios::out | std::ios::trunc);
+}
+auto logCurrentState(double time, double realtime_rate,
+                     simulator::SimulatorBase* base) -> void {
+  std::vector<std::array<double, 6>> parts_pe;
+  std::vector<std::array<double, 6>> parts_vs;
+  for (int i = 0; i < base->model()->partPool().size(); ++i) {
+    std::array<double, 6> buffer_pe{0}, buffer_vs{0};
+    base->model()->partPool().at(i).getPe(buffer_pe.data());
+    base->model()->partPool().at(i).getVs(buffer_vs.data());
+    parts_pe.push_back(buffer_pe);
+    parts_vs.push_back(buffer_vs);
+  }
+
+  file << time << " " << realtime_rate << " " << nlohmann::json(parts_pe).dump()
+       << " " << nlohmann::json(parts_vs).dump() << std::endl;
+}
+
 auto InitTrigger::trigger(simulator::SimulatorBase*) -> void {
   // manager->addEvent();
 }
@@ -304,7 +330,6 @@ auto StepHandler::handle(core::EventBase* e) -> bool {
   // Add Step Trigger to trigger list in Event Manager
   // EventManager ptr
 }
-
 auto InitEvent1::init() -> void {}
 auto InitHandler1::init(simulator::SimulatorBase* simulator) -> void {
   simulator_ptr = simulator;
@@ -338,6 +363,8 @@ auto StepHandler1::handle(core::EventBase* e) -> bool {
   simulator_ptr->integratorPoolPtr()->at(0).step(dt);
   // std::cout << "dt=" << dt << " ";
   simulator_ptr->timer().updateSimTime(dt);
+  logCurrentState(simulator_ptr->timer().simTime(),
+                  simulator_ptr->timer().realtimeRate(), simulator_ptr);
   // if (dt == 0.0000001) std::cout << "dt=" << dt << " ";
   StepEvent* event_ptr = dynamic_cast<StepEvent*>(e);
   core::ContactPairManager* manager_ptr = simulator_ptr->contactPairManager();

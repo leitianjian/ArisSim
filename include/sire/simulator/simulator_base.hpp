@@ -79,6 +79,7 @@ class SIRE_API SimulatorBase {
 
   auto deltaT() -> double;
   auto setDeltaT(double delta_t_in) -> void;
+  auto targetRealtimeRate() -> double;
   auto realtimeRate() -> double;
   auto setRealtimeRate(double rate) -> void;
   // auto getModelState(const std::function<void(aris::server::ControlServer&,

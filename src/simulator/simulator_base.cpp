@@ -311,11 +311,13 @@ auto SimulatorBase::setDeltaT(double delta_t_in) -> void {
   SIRE_ASSERT(delta_t_in >= 0);
   imp_->dt_ = delta_t_in;
 }
+auto SimulatorBase::targetRealtimeRate() -> double {
+  return imp_->timer_.targetRealtimeRate();
+}
 auto SimulatorBase::realtimeRate() -> double {
   return imp_->timer_.realtimeRate();
 }
 auto SimulatorBase::setRealtimeRate(double rate) -> void {
-  SIRE_ASSERT(rate >= 0);
   imp_->timer_.setRealtimeRate(rate);
 }
 auto SimulatorBase::setGlobalVariablePool(core::PropMap& pool) -> void {

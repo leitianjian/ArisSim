@@ -29,7 +29,11 @@ class Timer {
     begin_time_ = Clock::now();
   }
   auto setRealtimeRate(double rate) -> void { target_realtime_rate_ = rate; }
-  auto realtimeRate() -> double { return target_realtime_rate_; }
+  auto targetRealtimeRate() -> double { return target_realtime_rate_; }
+  auto realtimeRate() -> double {
+    return Duration(sim_time_) / (Clock::now() - begin_time_);
+  }
+  auto simTime() -> double { return sim_time_; }
 
  private:
   double target_realtime_rate_{1.0};
