@@ -25,13 +25,13 @@ enum class EventFeature {
 };
 
 using CollisionResultMap =
-    std::unordered_map<core::SortedPair<double>,
+    std::unordered_map<core::SortedPair<geometry::GeometryId>,
                        std::vector<physics::common::PenetrationAsPointPair>>;
 // TODO(leitianjian): 应该用一个工厂类实现Event的产生更好一些
 struct Event {
   std::unordered_set<EventFeature> functionalities_;
   CollisionResultMap contact_start_pair_;
-  std::unordered_set<core::SortedPair<double>> contact_end_pair_;
+  std::unordered_set<core::SortedPair<geometry::GeometryId>> contact_end_pair_;
   double time_;
 };
 /// <summary>

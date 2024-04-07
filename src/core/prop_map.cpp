@@ -8,6 +8,7 @@
 #include <aris/core/reflection.hpp>
 
 #include "sire/core/string_utils.hpp"
+#include "sire/core/constants.hpp"
 namespace sire::core {
 using std::unordered_map;
 struct PropMap::Imp {
@@ -46,7 +47,7 @@ auto PropMap::toString() const -> string {
   std::stringstream s;
   s.precision(15);
   s << "{";
-  int i = 0, size = imp_->map_.size();
+  sire::Size i = 0, size = imp_->map_.size();
   for (auto& [key, value] : imp_->map_) {
     if (i < size - 1) {
       s << key << ":" << value << ",";

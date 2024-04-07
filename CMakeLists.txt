@@ -4,11 +4,16 @@ project(sire VERSION 1.0.0)
 
 # set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-if(UNIX)
+if(UNIX AND NOT DEFINED CMAKE_INSTALL_PREFIX)
 	set(CMAKE_INSTALL_PREFIX "/usr/sire/sire-1.0")
-endif(UNIX)
-if(WIN32)
+endif(UNIX AND NOT DEFINED CMAKE_INSTALL_PREFIX)
+if(WIN32 AND NOT DEFINED CMAKE_INSTALL_PREFIX)
 	set(CMAKE_INSTALL_PREFIX "C:/sire/sire-1.0")
+endif(WIN32 AND NOT DEFINED CMAKE_INSTALL_PREFIX)
+
+if(WIN32)
+	add_definitions(-D_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING -D_CRT_SECURE_NO_WARNINGS)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4819")
 endif(WIN32)
 
 # Make sure kaanh and aris can be found
@@ -56,7 +61,6 @@ else()
 	message(WARNING "File/Directory at variable TARGET_HPP_FCL_PATH not exists!")
 endif()
 find_package(hpp-fcl REQUIRED)
-message(${hpp-fcl_INCLUDE_DIRS})
 
 include(GenerateExportHeader)
 add_library(sire_core OBJECT)

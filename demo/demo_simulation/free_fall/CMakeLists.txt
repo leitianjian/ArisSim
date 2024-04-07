@@ -1,16 +1,6 @@
-set(SOURCES main.cpp
-	test_events.hpp test_events.cpp
-)
+file(GLOB SOURCES *.h *.cpp)
 set(sire_demo "demo_simulation_free_fall")
 set(CONFIG_EXISTS ON)
-set(THREE_BALL_FREE_FALLING_EVENTS "WITH_PA" CACHE STRING "")
-set_property(CACHE THREE_BALL_FREE_FALLING_EVENTS PROPERTY STRINGS "GLOBAL_STEP", "WITHOUT_PA", "WITH_PA")
-if("${THREE_BALL_FREE_FALLING_EVENTS}" STREQUAL "GLOBAL_STEP")
-	add_definitions(-DSIRE_THREE_BALL_FREE_FALLING_USING_GLOBAL_STEP)
-elseif("${THREE_BALL_FREE_FALLING_EVENTS}" STREQUAL "WITHOUT_PA")
-	add_definitions(-DSIRE_THREE_BALL_FREE_FALLING_WITHOUT_PA)
-elseif("${THREE_BALL_FREE_FALLING_EVENTS}" STREQUAL "WITH_PA")
-endif()
 add_executable(${sire_demo} ${SOURCES})
 target_compile_features(${sire_demo} PUBLIC cxx_std_17)
 target_include_directories(${sire_demo} 

@@ -17,7 +17,7 @@ auto ExecuteRTTest::prepareNrt() -> void {
   }
 }
 auto ExecuteRTTest::executeRT() -> int {
-  return count() > imp_->count_ ? 0 : 1;
+  return count() > int64_t(imp_->count_) ? 0 : 1;
 }
 auto ExecuteRTTest::collectNrt() -> void {}
 ExecuteRTTest::ExecuteRTTest(const std::string& name) : imp_(new Imp) {

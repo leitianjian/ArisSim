@@ -50,7 +50,7 @@ Simulator::Simulator(const std::string& cs_config_path) : imp_(new Imp(this)) {
     imp_->cs_.executeCmd("md");
     imp_->cs_.executeCmd("rc");
   } catch (const std::exception& err) {
-    std::cout << "error Æô¶¯ControlServer´íÎó£¬Çë¼ì²éÅäÖÃÎÄ¼þ" << std::endl;
+    std::cout << "error Æô¶¯ControlServer´íÎó£¬Çë¼ì²éÅäÖÃÎÄ¼þ " << err.what() << std::endl;
     exit(1);
   }
 
@@ -92,7 +92,7 @@ Simulator::Simulator(const std::string& cs_config_path) : imp_(new Imp(this)) {
                         ++geoCount;
                       } catch (const std::bad_cast& e) {
                         std::cout << "part " << i << ", geometry " << j
-                                  << " is not FileGeometry, continue"
+                                  << " is not FileGeometry, continue " << e.what()
                                   << std::endl;
                       }
                     }

@@ -94,6 +94,7 @@ auto CollisionFilter::canCollideWith(const fcl::CollisionObject* o1,
 
     return canCollideWith(id_1, id_2);
   } catch (std::out_of_range& err) {
+    std::cout << err.what() << std::endl;
     return false;
   }
 }
@@ -133,7 +134,7 @@ auto CollisionFilter::loadMatConfig() -> void {
   }
 }
 auto CollisionFilter::saveMatConfig() -> void {
-  int32_t size = imp_->filter_state_.size();
+  sire::Size size = imp_->filter_state_.size();
   int i = 0;
   for (const auto& [id_1, geo_map] : imp_->filter_state_) {
     int j = i + 1;

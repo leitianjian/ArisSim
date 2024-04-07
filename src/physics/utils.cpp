@@ -89,6 +89,7 @@ auto compareAndCopy(const Model* src, Model* dest) -> void {
                   .componentAxis());
 
     } catch (std::bad_cast& e) {
+      std::cout << e.what() << std::endl;
     }
 
     try {
@@ -96,6 +97,7 @@ auto compareAndCopy(const Model* src, Model* dest) -> void {
           .setFce(
               dynamic_cast<const GeneralForce&>(src->forcePool().at(i)).fce());
     } catch (std::bad_cast& e) {
+      std::cout << e.what() << std::endl;
     }
   }
 }

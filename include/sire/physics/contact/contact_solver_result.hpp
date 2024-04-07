@@ -14,7 +14,7 @@
 namespace sire::physics::contact {
 using namespace hpp;
 struct ContactSolverResult {
-  void resize(int num_velocities, int num_contacts) {
+  void resize(sire::Size num_velocities, sire::Size num_contacts) {
     vs_next.resize(num_velocities, 0);
     fn.resize(num_contacts, 0);
     ft.resize(2 * num_contacts, 0);

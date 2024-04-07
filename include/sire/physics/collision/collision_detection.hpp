@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 
+#include <sire_lib_export.h>
+
 #include <hpp/fcl/broadphase/broadphase_callbacks.h>
 #include <hpp/fcl/broadphase/broadphase_collision_manager.h>
 #include <hpp/fcl/broadphase/default_broadphase_callbacks.h>

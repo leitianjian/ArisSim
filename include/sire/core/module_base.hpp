@@ -7,7 +7,7 @@
 
 namespace sire::core {
 using namespace std;
-class SIRE_API SireModuleBase : aris::core::NamedObject {
+class SIRE_API SireModuleBase : public aris::core::NamedObject {
  public:
   auto virtual init() -> void{};
   SireModuleBase() = default;

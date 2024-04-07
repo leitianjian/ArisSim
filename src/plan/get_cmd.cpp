@@ -17,7 +17,7 @@ struct GetParam {
   int state_code;
   bool is_cs_started;
   std::string currentPlan;
-  int currentPlanId;
+  sire::Size currentPlanId;
 
   // end_pq, end_pe, motion_pos, motion_vel, motion_acc, motion_toq, ai,
   // forcedata, forceoffset;

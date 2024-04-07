@@ -168,7 +168,7 @@ auto SimpleEventManager::resolveStartEvent(Event& start_event) -> void {
   if (penetrationPairs.size() != 0) {
     start_event.functionalities_.insert(EventFeature::CONTACT_START);
     for (auto& penetration : penetrationPairs) {
-      core::SortedPair<double> s(penetration.id_A, penetration.id_B);
+      core::SortedPair<geometry::GeometryId> s(penetration.id_A, penetration.id_B);
       // 直接将检测到的碰撞插入contact_start，认为他们都是碰撞开始
       // 此时是仿真开始，没有时刻比现在更早了，
       // 在resolveContactStart中直接对当前进行受力分析与微分方程求解
