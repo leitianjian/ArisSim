@@ -1,9 +1,12 @@
 #ifndef SIRE_CONTINUOUS_FORCE_CONTACT_SOLVER_HPP_
 #define SIRE_CONTINUOUS_FORCE_CONTACT_SOLVER_HPP_
 
+#include <array>
 #include <map>
+#include <memory>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <hpp/fcl/broadphase/broadphase_callbacks.h>
 #include <hpp/fcl/broadphase/broadphase_collision_manager.h>
@@ -25,10 +28,8 @@
 
 namespace sire::physics {
 namespace contact {
-using namespace std;
 using namespace hpp;
-/* contact-based implementation
- */
+/* contact-based implementation */
 class SIRE_API ContinuousForceContactSolver : public ContactSolver {
  public:
   ContinuousForceContactSolver();
@@ -42,9 +43,10 @@ class SIRE_API ContinuousForceContactSolver : public ContactSolver {
 
   auto setDefaultStiffness(double k) noexcept -> void;
   auto defaultStiffness() noexcept -> double;
-  auto setDefaultCr(double d) noexcept -> void;
+  auto setDefaultCr(double cr) noexcept -> void;
   auto defaultCr() noexcept -> double;
-
+  auto setDefaultVelocityThreshold(double tv) noexcept -> void;
+  auto defaultVelocityThreshold() noexcept -> double;
   virtual auto cptContactSolverResult(
       const aris::dynamic::Model* current_state,
       const std::vector<common::PenetrationAsPointPair>& penetration_pairs,

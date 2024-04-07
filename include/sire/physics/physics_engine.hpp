@@ -1,6 +1,10 @@
 #ifndef SIRE_PHYSICS_ENGINE_HPP_
 #define SIRE_PHYSICS_ENGINE_HPP_
 
+#include <array>
+#include <unordered_map>
+#include <vector>
+
 #include <sire_lib_export.h>
 
 #include "sire/core/material_manager.hpp"
@@ -79,6 +83,12 @@ class SIRE_API PhysicsEngine {
   // compute proximity velocity
   auto cptProximityVelocity(const common::PenetrationAsPointPair& penetration)
       -> double;
+  auto cptTangentialVelocity(const common::PenetrationAsPointPair& penetration,
+                             const std::array<double, 16>& T_contact,
+                             std::array<double, 2>& vt) -> void;
+  auto cptContactVelocityB2A(const common::PenetrationAsPointPair& penetration,
+                             const std::array<double, 16>& T_contact,
+                             std::array<double, 3>& v_contact) -> void;
 
   // engine state getter
   inline auto numGeometries() -> sire::Size { return geometryPool().size(); }

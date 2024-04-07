@@ -1,6 +1,5 @@
 #include "sire/physics/contact/continuous_force_contact_solver.hpp"
 
-#include <cmath>
 #include <fstream>
 #include <mutex>
 #include <string>
@@ -30,12 +29,7 @@ using PartPool =
     aris::core::PointerArray<aris::dynamic::Part, aris::dynamic::Element>;
 struct ContinuousForceContactSolver::Imp {
   unique_ptr<core::MaterialManager> material_manager_;
-  // 消耗系数
   double default_cr_;
-  // 摩擦系数
-  double default_cof_;
-  // 速度阈值 velocity threshold
-  double default_tv_;
   double default_k_;
 
   auto combineContactMass(double m1, double m2) -> double {
@@ -52,10 +46,8 @@ struct ContinuousForceContactSolver::Imp {
   }
   Imp()
       : material_manager_(std::make_unique<core::MaterialManager>()),
-        default_cr_(0.2),
-        default_k_(2.8e8),
-        default_cof_(0.3),
-        default_tv_(0.1) {}
+        default_cr_(0.8),
+        default_k_(2.8e14) {}
 };
 ContinuousForceContactSolver::ContinuousForceContactSolver()
     : imp_(std::make_unique<Imp>()) {}
@@ -81,14 +73,6 @@ auto ContinuousForceContactSolver::setDefaultCr(double cr) noexcept -> void {
 auto ContinuousForceContactSolver::defaultCr() noexcept -> double {
   return imp_->default_cr_;
 }
-auto ContinuousForceContactSolver::setDefaultVelocityThreshold(
-    double tv) noexcept -> void {
-  imp_->default_tv_ = tv;
-}
-auto ContinuousForceContactSolver::defaultVelocityThreshold() noexcept
-    -> double {
-  return imp_->default_tv_;
-}
 auto ContinuousForceContactSolver::cptContactSolverResult(
     const aris::dynamic::Model* current_state,
     const std::vector<common::PenetrationAsPointPair>& penetration_pairs,
@@ -102,18 +86,13 @@ auto ContinuousForceContactSolver::cptContactSolverResult(
       //   std::cout << " vn=" << vn << " fn1=" << result.fn[i] << " ";
       // }
       result.fn[i] = 0;
-      result.ft[2 * i] = 0;
-      result.ft[2 * i + 1] = 0;
       continue;
     }
     auto* geometry_A = physicsEnginePtr()->queryGeometryPoolById(pair.id_A);
     auto* geometry_B = physicsEnginePtr()->queryGeometryPoolById(pair.id_B);
     core::PropMap& contact_prop_A = geometry_A->contactProp();
     core::PropMap& contact_prop_B = geometry_B->contactProp();
-    std::array<double, 3> v_contact{0};
-    physicsEnginePtr()->cptContactVelocityB2A(pair, T_C_vec[i], v_contact);
-    // double vn = physicsEnginePtr()->cptProximityVelocity(pair);
-    double vn = -v_contact[2];
+    double vn = physicsEnginePtr()->cptProximityVelocity(pair);
     const core::PropMap& pair_prop =
         imp_->material_manager_->getPropMapOrDefault(
             {geometry_A->material(), geometry_B->material()});
@@ -124,49 +103,13 @@ auto ContinuousForceContactSolver::cptContactSolverResult(
         contact_prop_B.getPropValueOrDefault("k", imp_->default_k_));
     auto m = imp_->combineContactMass(
         this->partPoolPtr()->at(geometry_A->partId()).prtIv()[0],
-        this->partPoolPtr()->at(geometry_B->partId()).prtIv()[0]);
+        this->partPoolPtr()->at(geometry_A->partId()).prtIv()[0]);
     double fn =
         k * pair.depth +
         2 * absLnCr * vn *
             std::sqrt((k * m) / (sire::PI * sire::PI + absLnCr * absLnCr));
     // result.fn[i] = fn < 0 ? 0 : fn;
     result.fn[i] = fn;
-
-    // double threshold_velocity = pair_prop.getPropValueOrDefault(
-    //     "threshold_velocity", imp_->default_tv_);
-    // double friction_coefficient =
-    //     pair_prop.getPropValueOrDefault("cof", imp_->default_cof_);
-    // 
-    // double zero_check = 1e-8;
-    // auto safe_div = [](double number, double denominator, double zero_check,
-    //                    double err_set) -> double {
-    //   return std::abs(denominator) <= zero_check ? err_set
-    //                                              : number / denominator;
-    // };
-    // double vt = aris::dynamic::s_norm(2, v_contact.data());
-    // if (vt < zero_check) return;
-    // double t1 = std::abs(safe_div(v_contact[0], v_contact[1], 1e-8, 1e10));
-    // double t2 = std::sqrt(t1 * t1 + 1);
-    // 
-    // double ft{0};
-    // if (vt > threshold_velocity) {
-    //   ft = std::abs(0.95 * friction_coefficient * fn);
-    // } else {
-    //   ft = std::abs(friction_coefficient * fn *
-    //                 (std::expm1(-3 / threshold_velocity * vt)));
-    // }
-    // result.ft[2 * i] = -1 * aris::dynamic::s_sgn(v_contact[0]) * ft *
-    //                    safe_div(t1, t2, zero_check, 0.0);
-    // result.ft[2 * i + 1] = -1 * aris::dynamic::s_sgn(v_contact[1]) * ft *
-    //                        safe_div(1, t2, zero_check, 0.0);
-    // 
-    // std::cout << result.ft[2 * i] << " " << result.ft[2 * i + 1] << " "
-    //           << v_contact[0] << " " << v_contact[1] << std::endl;
-    // result.ft[2 * i] = 0;
-    // result.ft[2 * i + 1] = 0;
-    // std::cout << "ft = " << result.ft[2 * i] << " " << result.ft[2 * i + 1]
-    //           << " vt = " << vt << " " << v_contact[0] << " " << v_contact[1]
-    //           << std::endl;
     // if (pair.id_B == 1) {
     //   std::cout << " vn=" << vn << " fn1=" << result.fn[i] << " ";
     // }
@@ -284,8 +227,6 @@ ARIS_REGISTRATION {
             &ContinuousForceContactSolver::resetMaterialManager,
             MaterialManagerFunc(&ContinuousForceContactSolver::materialManager))
       .prop("default_k", &ContinuousForceContactSolver::setDefaultStiffness,
-            &ContinuousForceContactSolver::defaultStiffness)
-      .prop("default_cr", &ContinuousForceContactSolver::setDefaultCr,
-            &ContinuousForceContactSolver::defaultCr);
+            &ContinuousForceContactSolver::defaultStiffness);
 }
 }  // namespace sire::physics::contact
