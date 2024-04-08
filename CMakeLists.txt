@@ -245,20 +245,12 @@ target_compile_options(sire_simulator
 target_compile_features(sire_simulator PUBLIC cxx_std_17)
 target_sources(sire_simulator 
 	PRIVATE 
-		"src/simulator/simulator.cpp"
-		"src/simulator/simulator_base.cpp"
-		#"src/simulator/event_manager.cpp"
+		"src/simulator/simulation_loop.cpp"
 		"src/simulator/events.cpp"
-		"src/simulator/simple_event_manager.cpp"
-		"src/simulator/dynamic_simulator.cpp"
 		"src/simulator/simulator_modules.cpp"
 	PUBLIC 
-		"include/sire/simulator/simulator.hpp"
-		"include/sire/simulator/simulator_base.hpp"
-		#"include/sire/simulator/event_manager.hpp"
+		"include/sire/simulator/simulation_loop.hpp"
 		"include/sire/simulator/events.hpp"
-		"include/sire/simulator/simple_event_manager.hpp"
-		"include/sire/simulator/dynamic_simulator.hpp"
 		"include/sire/simulator/simulator_modules.hpp"
 	)
 
@@ -374,33 +366,33 @@ install(DIRECTORY include/sire/middleware DESTINATION include/sire)
 # 	)
 # install(DIRECTORY include/sire/controller DESTINATION include/sire)
 
-add_library(sire_transfer OBJECT)
-target_compile_definitions(sire_transfer PRIVATE sire_lib_EXPORTS)
-target_compile_features(sire_transfer PUBLIC cxx_std_17)
-target_sources(sire_transfer 
-	PRIVATE 
-		"src/transfer/force_control_simulation_transfer.cpp"
-		"src/transfer/simulation_transfer.cpp"
-		"src/transfer/part_pq_transfer.cpp"
-#		"src/transfer/virtual_force_sensor_transfer.cpp"
-	PUBLIC 
-		"include/sire/transfer/force_control_simulation_transfer.hpp"
-		"include/sire/transfer/simulation_transfer.hpp"
-		"include/sire/transfer/part_pq_transfer.hpp"
-#		"include/sire/transfer/virtual_force_sensor_transfer.hpp"
-	)
-target_include_directories(sire_transfer
-	PUBLIC
-		$<INSTALL_INTERFACE:include> 
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		${aris_INCLUDE_DIRS}
-		${hpp-fcl_INCLUDE_DIRS}
-	PRIVATE
-		${PROJECT_SOURCE_DIR}/src
-		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
-		${ASSIMP_INCLUDE_DIRS}
-	)
-install(DIRECTORY include/sire/transfer DESTINATION include/sire)
+# add_library(sire_transfer OBJECT)
+# target_compile_definitions(sire_transfer PRIVATE sire_lib_EXPORTS)
+# target_compile_features(sire_transfer PUBLIC cxx_std_17)
+# target_sources(sire_transfer 
+# 	PRIVATE 
+# 		"src/transfer/force_control_simulation_transfer.cpp"
+# 		"src/transfer/simulation_transfer.cpp"
+# 		"src/transfer/part_pq_transfer.cpp"
+# #		"src/transfer/virtual_force_sensor_transfer.cpp"
+# 	PUBLIC 
+# 		"include/sire/transfer/force_control_simulation_transfer.hpp"
+# 		"include/sire/transfer/simulation_transfer.hpp"
+# 		"include/sire/transfer/part_pq_transfer.hpp"
+# #		"include/sire/transfer/virtual_force_sensor_transfer.hpp"
+# 	)
+# target_include_directories(sire_transfer
+# 	PUBLIC
+# 		$<INSTALL_INTERFACE:include> 
+# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+# 		${aris_INCLUDE_DIRS}
+# 		${hpp-fcl_INCLUDE_DIRS}
+# 	PRIVATE
+# 		${PROJECT_SOURCE_DIR}/src
+# 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
+# 		${ASSIMP_INCLUDE_DIRS}
+# 	)
+# install(DIRECTORY include/sire/transfer DESTINATION include/sire)
 
 add_library(sire_sensor OBJECT)
 target_compile_definitions(sire_sensor PRIVATE sire_lib_EXPORTS)
@@ -462,7 +454,6 @@ add_library(sire_lib
 		$<TARGET_OBJECTS:sire_integrator>
 		$<TARGET_OBJECTS:sire_simulator>
 		$<TARGET_OBJECTS:sire_server>
-		$<TARGET_OBJECTS:sire_transfer>
 		$<TARGET_OBJECTS:sire_sensor>
 		$<TARGET_OBJECTS:sire_cam_backend>
 	)

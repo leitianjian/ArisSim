@@ -38,7 +38,7 @@ auto SimulationWithAction::prepareNrt() -> void {
   par.general_motion_v.resize(model()->generalMotionPool().size());
   auto& cs = *controlServer();
   auto& middleware = dynamic_cast<middleware::SireMiddleware&>(cs.middleWare());
-  auto& simulator = middleware.simulatorBase();
+  auto& simulator = middleware.simulationLoop();
   for (const auto& cmd_param : cmdParams()) {
     if (cmd_param.first == "action") {
       par.motors_f.clear();

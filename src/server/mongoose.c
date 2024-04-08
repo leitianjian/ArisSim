@@ -6428,10 +6428,18 @@ long mg_io_send(struct mg_connection *c, const void *buf, size_t len) {
   if (c->is_udp) {
     union usa usa;
     socklen_t slen = tousa(&c->rem, &usa);
+#if MG_ARCH == MG_ARCH_WIN32
+    n = sendto(FD(c), (char *) buf, (int) len, 0, &usa.sa, slen);
+#else
     n = sendto(FD(c), (char *) buf, len, 0, &usa.sa, slen);
+#endif
     if (n > 0) setlocaddr(FD(c), &c->loc);
   } else {
+#if MG_ARCH == MG_ARCH_WIN32
+    n = send(FD(c), (char *) buf, (int) len, MSG_NONBLOCKING);
+#else
     n = send(FD(c), (char *) buf, len, MSG_NONBLOCKING);
+#endif
   }
   if (MG_SOCK_PENDING(n)) return MG_IO_WAIT;
   if (MG_SOCK_RESET(n)) return MG_IO_RESET;
@@ -6549,10 +6557,18 @@ long mg_io_recv(struct mg_connection *c, void *buf, size_t len) {
   if (c->is_udp) {
     union usa usa;
     socklen_t slen = tousa(&c->rem, &usa);
+#if MG_ARCH == MG_ARCH_WIN32
+    n = recvfrom(FD(c), (char *) buf, (int) len, 0, &usa.sa, &slen);
+#else
     n = recvfrom(FD(c), (char *) buf, len, 0, &usa.sa, &slen);
+#endif
     if (n > 0) tomgaddr(&usa, &c->rem, slen != sizeof(usa.sin));
   } else {
+#if MG_ARCH == MG_ARCH_WIN32
+    n = recv(FD(c), (char *) buf, (int) len, MSG_NONBLOCKING);
+#else
     n = recv(FD(c), (char *) buf, len, MSG_NONBLOCKING);
+#endif
   }
   if (MG_SOCK_PENDING(n)) return MG_IO_WAIT;
   if (MG_SOCK_RESET(n)) return MG_IO_RESET;

@@ -15,7 +15,7 @@
 #include "sire/physics/physics_engine.hpp"
 #include "sire/sensor/sensor.hpp"
 #include "sire/server/interface.hpp"
-#include "sire/simulator/simulator_base.hpp"
+#include "sire/simulator/simulation_loop.hpp"
 #include "sire/simulator/simulator_modules.hpp"
 
 // TODO(leitianjian): SireMiddleware和Programming middleware功能上需要合并
@@ -28,11 +28,11 @@ class SIRE_API SireMiddleware : public aris::server::MiddleWare {
                           std::function<void(std::string)> send_ret,
                           aris::server::Interface* interface) -> int override;
   // Simulator
-  auto resetSimulatorBase(simulator::SimulatorBase* simulator) -> void;
-  auto simulatorBase() const -> const simulator::SimulatorBase&;
-  auto simulatorBase() -> simulator::SimulatorBase& {
-    return const_cast<simulator::SimulatorBase&>(
-        static_cast<const SireMiddleware&>(*this).simulatorBase());
+  auto resetSimulationLoop(simulator::SimulationLoop* simulator) -> void;
+  auto simulationLoop() const -> const simulator::SimulationLoop&;
+  auto simulationLoop() -> simulator::SimulationLoop& {
+    return const_cast<simulator::SimulationLoop&>(
+        static_cast<const SireMiddleware&>(*this).simulationLoop());
   }
 
   // Physics Engine

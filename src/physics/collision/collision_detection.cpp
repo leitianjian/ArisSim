@@ -21,7 +21,6 @@
 #include "sire/physics/collision/penetration_as_point_pair_callback.hpp"
 #include "sire/physics/geometry/sphere_collision_geometry.hpp"
 #include "sire/physics/physics_engine.hpp"
-#include "sire/transfer/part_pq_transfer.hpp"
 
 namespace sire::physics::collision {
 struct CollisionDetection::Imp {

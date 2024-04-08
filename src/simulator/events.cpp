@@ -37,7 +37,7 @@ auto process_impact_threshold(aris::dynamic::Model* m,
   return std::make_pair(impact_threshold_insert, impact_threshold_remove);
 }
 // 需要跳过除了接触力的其他力导致的大impact
-auto cpt_prt_contact_impact(simulator::SimulatorBase* s)
+auto cpt_prt_contact_impact(simulator::SimulationLoop* s)
     -> std::vector<double> {
   SIRE_DEMAND(s != nullptr);
   aris::dynamic::Model* m = s->model();
@@ -71,7 +71,7 @@ auto cpt_prt_contact_impact(simulator::SimulatorBase* s)
   return result;
 }
 auto process_penetration_depth_and_maintain_impact_set(
-    simulator::SimulatorBase* simulator_ptr) -> void {
+    simulator::SimulationLoop* simulator_ptr) -> void {
   physics::PhysicsEngine* engine_ptr = simulator_ptr->physicsEnginePtr();
   core::ContactPairManager* manager_ptr = simulator_ptr->contactPairManager();
 
@@ -252,7 +252,7 @@ auto initLog() -> void {
   file.open(file_name.string() + ".txt", std::ios::out | std::ios::trunc);
 }
 auto logCurrentState(double time, double realtime_rate,
-                     simulator::SimulatorBase* base) -> void {
+                     simulator::SimulationLoop* base) -> void {
   std::vector<std::array<double, 6>> parts_pe;
   std::vector<std::array<double, 6>> parts_vs;
   for (int i = 0; i < base->model()->partPool().size(); ++i) {
@@ -267,11 +267,11 @@ auto logCurrentState(double time, double realtime_rate,
        << " " << nlohmann::json(parts_vs).dump() << std::endl;
 }
 
-auto InitTrigger::trigger(simulator::SimulatorBase*) -> void {
+auto InitTrigger::trigger(simulator::SimulationLoop*) -> void {
   // manager->addEvent();
 }
 auto InitEvent::init() -> void {}
-auto InitHandler::init(simulator::SimulatorBase* simulator) -> void {
+auto InitHandler::init(simulator::SimulationLoop* simulator) -> void {
   simulator_ptr = simulator;
 }
 auto InitHandler::handle(core::EventBase* e) -> bool {
@@ -294,7 +294,7 @@ auto InitHandler::handle(core::EventBase* e) -> bool {
   // EventManager ptr
 }
 auto StepEvent::init() -> void {}
-auto StepHandler::init(simulator::SimulatorBase* simulator) -> void {
+auto StepHandler::init(simulator::SimulationLoop* simulator) -> void {
   simulator_ptr = simulator;
 }
 static double cumulate_time = 0;
@@ -329,7 +329,7 @@ auto StepHandler::handle(core::EventBase* e) -> bool {
   // EventManager ptr
 }
 auto InitEvent1::init() -> void {}
-auto InitHandler1::init(simulator::SimulatorBase* simulator) -> void {
+auto InitHandler1::init(simulator::SimulationLoop* simulator) -> void {
   simulator_ptr = simulator;
 }
 auto InitHandler1::handle(core::EventBase* e) -> bool {
@@ -355,7 +355,7 @@ auto InitHandler1::handle(core::EventBase* e) -> bool {
   // EventManager ptr
 }
 auto StepEvent1::init() -> void {}
-auto StepHandler1::init(simulator::SimulatorBase* simulator) -> void {
+auto StepHandler1::init(simulator::SimulationLoop* simulator) -> void {
   simulator_ptr = simulator;
 }
 auto StepHandler1::handle(core::EventBase* e) -> bool {

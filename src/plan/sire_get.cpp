@@ -29,7 +29,7 @@ auto SireGet::prepareNrt() -> void {
   GetParam par;
   auto& cs = *controlServer();
   auto& middleware = dynamic_cast<middleware::SireMiddleware&>(cs.middleWare());
-  auto& simulator = middleware.simulatorBase();
+  auto& simulator = middleware.simulationLoop();
 
   auto part_pq_only = cmdParams().find("part_pq");
   // 如果只需要part_pq
@@ -47,7 +47,7 @@ auto SireGet::prepareNrt() -> void {
   std::any param = par;
   if (part_pq_only != cmdParams().end()) {
     simulator.getModelState(
-        [](aris::server::ControlServer& cs, simulator::SimulatorBase& s,
+        [](aris::server::ControlServer& cs, simulator::SimulationLoop& s,
            std::any& data) -> void {
           auto& get_param = std::any_cast<GetParam&>(data);
           auto m = dynamic_cast<aris::dynamic::Model*>(&cs.model());
@@ -60,7 +60,7 @@ auto SireGet::prepareNrt() -> void {
         param);
   } else {
     simulator.getModelState(
-        [](aris::server::ControlServer& cs, simulator::SimulatorBase&,
+        [](aris::server::ControlServer& cs, simulator::SimulationLoop&,
            std::any& data) -> void {
           auto& get_param = std::any_cast<GetParam&>(data);
           auto m = dynamic_cast<aris::dynamic::Model*>(&cs.model());

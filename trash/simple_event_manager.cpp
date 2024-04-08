@@ -8,7 +8,7 @@
 
 #include "sire/core/sire_assert.hpp"
 #include "sire/core/sorted_pair.hpp"
-#include "sire/simulator/simulator.hpp"
+#include "sire/simulator/simulation_loop.hpp"
 
 namespace sire::simulator {
 using core::SortedPair;
@@ -29,20 +29,20 @@ struct SimpleEventManager::Imp {
 
   // 打洞，读取数据 //
   std::atomic_bool if_get_data_{false}, if_get_data_ready_{false};
-  const std::function<void(aris::server::ControlServer&, Simulator&,
+  const std::function<void(aris::server::ControlServer&, SimulationLoop&,
                            std::any&)>* get_data_func_{nullptr};
   std::any* get_data_{nullptr};
 };
 SimpleEventManager::SimpleEventManager()
     : imp_(new Imp),
       dt_(0.001),
-      simulator_ptr_(nullptr),
+      simulation_loop_ptr_(nullptr),
       engine_ptr_(nullptr) {}
 SimpleEventManager::~SimpleEventManager() = default;
 SIRE_DEFINE_MOVE_CTOR_CPP(SimpleEventManager);
 
 auto SimpleEventManager::init() -> void {
-  dt_ = simulator_ptr_->deltaT();
+  dt_ = simulation_loop_ptr_->deltaT();
   imp_->header_ = imp_->event_list_.begin();
   imp_->next_ = imp_->event_list_.end();
 
@@ -68,7 +68,7 @@ auto SimpleEventManager::start() -> void {
 
       if (imp_->if_get_data_.exchange(false)) {
         imp_->get_data_func_->operator()(
-            aris::server::ControlServer::instance(), *simulator_ptr_,
+            aris::server::ControlServer::instance(), *simulation_loop_ptr_,
             *imp_->get_data_);
         imp_->if_get_data_ready_.store(true);  // 原子操作
       }
@@ -79,7 +79,7 @@ auto SimpleEventManager::start() -> void {
       Event& next = *imp_->next_;
       imp_->next_time_ = next.time_;
       // Step前Model备份
-      simulator_ptr_->backupModel();
+      simulation_loop_ptr_->backupModel();
       step(imp_->next_time_ - imp_->current_time_);
       std::this_thread::sleep_until(
           imp_->begin_time_ +
@@ -95,7 +95,7 @@ auto SimpleEventManager::start() -> void {
 }
 
 auto SimpleEventManager::getModelState(
-    const std::function<void(aris::server::ControlServer&, Simulator&,
+    const std::function<void(aris::server::ControlServer&, SimulationLoop&,
                              std::any&)>& get_func,
     std::any& get_data) -> void {
   if (!imp_->is_event_manager_running_) THROW_FILE_LINE("simulator not start");
@@ -112,7 +112,7 @@ auto SimpleEventManager::getModelState(
 }
 
 auto SimpleEventManager::step(double dt) -> bool {
-  return simulator_ptr_->integratorPoolPtr()->at(0).step(dt);
+  return simulation_loop_ptr_->integratorPoolPtr()->at(0).step(dt);
 }
 
 auto SimpleEventManager::resolveEvent(Event& e) -> void {

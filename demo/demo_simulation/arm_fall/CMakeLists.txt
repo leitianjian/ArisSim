@@ -15,7 +15,6 @@ target_link_libraries(${sire_demo}
 		sire_core 
 		sire_server 
 		sire_middleware 
-		sire_transfer 
 		sire_integrator
 		sire_simulator
 		sire_sensor

@@ -1,5 +1,5 @@
-#ifndef SIRE_EVENT_MANAGER_BASE_HPP_
-#define SIRE_EVENT_MANAGER_BASE_HPP_
+#ifndef SIRE_EVENT_MANAGER_HPP_
+#define SIRE_EVENT_MANAGER_HPP_
 #include <any>
 #include <unordered_map>
 #include <unordered_set>
@@ -15,7 +15,7 @@
 #include "sire/physics/physics_engine.hpp"
 
 namespace sire::simulator {
-class Simulator;
+class SimulationLoop;
 enum class EventFeature {
   START,          // 开始
   END,            // 结束
@@ -25,21 +25,20 @@ enum class EventFeature {
 };
 
 using CollisionResultMap =
-    std::unordered_map<core::SortedPair,
+    std::unordered_map<core::SortedPair<double>,
                        std::vector<physics::common::PenetrationAsPointPair>>;
 // TODO(leitianjian): 应该用一个工厂类实现Event的产生更好一些
 struct Event {
   std::unordered_set<EventFeature> functionalities_;
   CollisionResultMap contact_start_pair_;
-  std::unordered_set<core::SortedPair> contact_end_pair_;
+  std::unordered_set<core::SortedPair<double>> contact_end_pair_;
   double time_;
 };
 /// <summary>
-///  EventManager的基类，提供接口规范，是用来控制物理引擎的驱动，所有的物理计算在PhysicalEngine和Model中解决，
+///  EventManager是用来控制物理引擎的驱动，所有的物理计算在PhysicalEngine和Model中解决，
 ///  但仿真实际上由EventManager驱动。
 /// </summary>
-/// TODO(leitianjian): remove controlserver dependancy
-class EventManagerBase {
+class EventManager {
  public:
   auto init() -> void;
 
@@ -48,28 +47,16 @@ class EventManagerBase {
   * @returns 如果成功，返回`true`，当前时间步进到事件时间，
              如果失败，返回`false`，当前时间不步进
   */
-  virtual auto step(double dt) -> bool;
-  virtual auto start() -> void;
+  auto step(double dt) -> bool;
+  auto start() -> void;
 
   auto getModelState(const std::function<void(aris::server::ControlServer&,
-                                              Simulator&, std::any&)>& get_func,
+                                              SimulationLoop&, std::any&)>& get_func,
                      std::any& get_data) -> void;
 
-  EventManagerBase();
-  virtual ~EventManagerBase();
-  SIRE_DECLARE_MOVE_CTOR(EventManagerBase);
-
- protected:
-  virtual auto doInit() -> void{};
-
-  auto insertEventAt(Event&& e, std::list<Event>::const_iterator it,
-                     bool reverse = false) -> void;
-  auto addNextStepEventAt(double time, std::list<Event>::const_iterator it,
-                          bool reverse = false) -> void;
-  auto addPrevContactStartEventAt(double time,
-                                  CollisionResultMap&& collision_result,
-                                  std::list<Event>::const_iterator it,
-                                  bool reverse = false) -> void;
+  EventManager();
+  virtual ~EventManager();
+  SIRE_DECLARE_MOVE_CTOR(EventManager);
 
  private:
   auto resolveEvent(Event& e) -> void;
@@ -85,14 +72,23 @@ class EventManagerBase {
   auto preprocessNormalStepEvent(Event& e) -> void;
   auto preprocessEndEvent(Event& e) -> void;
 
+  auto insertEventAt(Event&& e, std::list<Event>::const_iterator it,
+                     bool reverse = false) -> void;
+  auto addNextStepEventAt(double time, std::list<Event>::const_iterator it,
+                          bool reverse = false) -> void;
+  auto addPrevContactStartEventAt(double time,
+                                  CollisionResultMap&& collision_result,
+                                  std::list<Event>::const_iterator it,
+                                  bool reverse = false) -> void;
+
   // init ptr from parent object Simulator
   physics::PhysicsEngine* engine_ptr_;
-  Simulator* simulator_ptr_;
+  SimulationLoop* simulator_ptr_;
   // config from simulator
   double dt_;
   struct Imp;
   aris::core::ImpPtr<Imp> imp_;
-  friend class Simulator;
+  friend class SimulationLoop;
 };
 }  // namespace sire::simulator
 #endif

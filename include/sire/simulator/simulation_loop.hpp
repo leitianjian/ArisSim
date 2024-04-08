@@ -1,5 +1,5 @@
-#ifndef SIRE_SIMULATOR_BASE_HPP_
-#define SIRE_SIMULATOR_BASE_HPP_
+#ifndef SIRE_SIMULATION_LOOP_HPP_
+#define SIRE_SIMULATION_LOOP_HPP_
 #include <sire_lib_export.h>
 
 #include <aris/core/object.hpp>
@@ -24,7 +24,7 @@ class SireMiddleware;
 }
 namespace simulator {
 // Under Model node, using pointer to get useful resource
-class SIRE_API SimulatorBase {
+class SIRE_API SimulationLoop {
   using IntegratorPool = aris::core::PointerArray<IntegratorBase>;
   using SensorPool = aris::core::PointerArray<sensor::SensorBase>;
 
@@ -45,14 +45,14 @@ class SIRE_API SimulatorBase {
   auto integratorPoolPtr() const -> const IntegratorPool*;
   auto integratorPoolPtr() -> IntegratorPool* {
     return const_cast<IntegratorPool*>(
-        static_cast<const SimulatorBase*>(this)->integratorPoolPtr());
+        static_cast<const SimulationLoop*>(this)->integratorPoolPtr());
   }
 
   auto resetSensorPoolPtr(SensorPool* new_ptr) -> void;
   auto sensorPoolPtr() const -> const SensorPool*;
   auto sensorPoolPtr() -> SensorPool* {
     return const_cast<SensorPool*>(
-        static_cast<const SimulatorBase*>(this)->sensorPoolPtr());
+        static_cast<const SimulationLoop*>(this)->sensorPoolPtr());
   }
 
   // PhysicsEngine //
@@ -60,21 +60,21 @@ class SIRE_API SimulatorBase {
   auto physicsEnginePtr() const -> const physics::PhysicsEngine*;
   auto physicsEnginePtr() -> physics::PhysicsEngine* {
     return const_cast<physics::PhysicsEngine*>(
-        static_cast<const SimulatorBase*>(this)->physicsEnginePtr());
+        static_cast<const SimulationLoop*>(this)->physicsEnginePtr());
   }
 
   auto setGlobalVariablePool(core::PropMap& map) -> void;
   auto getGlobalVariablePool() const -> const core::PropMap&;
   auto getGlobalVariablePool() -> core::PropMap& {
     return const_cast<core::PropMap&>(
-        static_cast<const SimulatorBase&>(*this).getGlobalVariablePool());
+        static_cast<const SimulationLoop&>(*this).getGlobalVariablePool());
   }
 
   auto resetEventManager(core::EventManager* manager) -> void;
   auto eventManager() const -> const core::EventManager&;
   auto eventManager() -> core::EventManager& {
     return const_cast<core::EventManager&>(
-        static_cast<const SimulatorBase*>(this)->eventManager());
+        static_cast<const SimulationLoop*>(this)->eventManager());
   }
 
   auto deltaT() -> double;
@@ -91,7 +91,7 @@ class SIRE_API SimulatorBase {
   inline auto contactPairManager() noexcept -> core::ContactPairManager*;
 
   auto getModelState(
-      const std::function<void(aris::server::ControlServer&, SimulatorBase&,
+      const std::function<void(aris::server::ControlServer&, SimulationLoop&,
                                std::any&)>& get_func,
       std::any& get_data) -> void;
 
@@ -117,9 +117,9 @@ class SIRE_API SimulatorBase {
   auto playback() -> void{};
   auto stop() -> void{};
 
-  SimulatorBase();
-  virtual ~SimulatorBase();
-  SIRE_DECLARE_MOVE_CTOR(SimulatorBase);
+  SimulationLoop();
+  virtual ~SimulationLoop();
+  SIRE_DECLARE_MOVE_CTOR(SimulationLoop);
 
  protected:
   auto resolveContact() -> void;

@@ -23,7 +23,6 @@
 #include "sire/physics/collision/collision_exists_callback.hpp"
 #include "sire/physics/geometry/collidable_geometry.hpp"
 #include "sire/physics/physics_engine.hpp"
-#include "sire/transfer/part_pq_transfer.hpp"
 
 namespace sire::physics::contact {
 using PartPool =

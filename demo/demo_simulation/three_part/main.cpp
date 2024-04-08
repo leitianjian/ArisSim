@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
   aris::core::fromXmlFile(cs, xmlpath);
   auto& simulator =
       dynamic_cast<sire::middleware::SireMiddleware&>(cs.middleWare())
-          .simulatorBase();
+          .simulationLoop();
   cs.init();
   //simulator.start();
 
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   try {
     cs.start();
   } catch (const std::exception& err) {
-    std::cout << "failed to start system, please reboot" << std::endl;
+    std::cout << "failed to start system, please reboot " << err.what() << std::endl;
   }
   // Start Web Socket
   cs.open();

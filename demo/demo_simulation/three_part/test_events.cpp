@@ -15,7 +15,7 @@
 namespace sire::three_part {
 using namespace sire::physics;
 auto InitEvent1::init() -> void {}
-auto InitHandler::init(simulator::SimulatorBase* simulator) -> void {
+auto InitHandler::init(simulator::SimulationLoop* simulator) -> void {
   simulator_ptr = simulator;
 }
 auto InitHandler::handle(core::EventBase* e) -> bool {
@@ -30,7 +30,7 @@ auto InitHandler::handle(core::EventBase* e) -> bool {
   return true;
 }
 auto StepEvent::init() -> void {}
-auto StepHandler::init(simulator::SimulatorBase* simulator) -> void {
+auto StepHandler::init(simulator::SimulationLoop* simulator) -> void {
   simulator_ptr = simulator;
 }
 auto StepHandler::handle(core::EventBase* e) -> bool {

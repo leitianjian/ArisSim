@@ -29,7 +29,7 @@ struct EventManager::Imp {
 
   // 打洞，读取数据 //
   std::atomic_bool if_get_data_{false}, if_get_data_ready_{false};
-  const std::function<void(aris::server::ControlServer&, Simulator&,
+  const std::function<void(aris::server::ControlServer&, SimulationLoop&,
                            std::any&)>* get_data_func_;
   std::any* get_data_;
 };
@@ -123,7 +123,7 @@ auto EventManager::start() -> void {
 }
 
 auto EventManager::getModelState(
-    const std::function<void(aris::server::ControlServer&, Simulator&,
+    const std::function<void(aris::server::ControlServer&, SimulationLoop&,
                              std::any&)>& get_func,
     std::any& get_data) -> void {
   if (!imp_->is_event_manager_running_) THROW_FILE_LINE("simulator not start");

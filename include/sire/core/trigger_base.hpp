@@ -16,7 +16,7 @@
 #include "sire/core/sire_assert.hpp"
 #include "sire/core/sire_decl_def_macro.hpp"
 namespace sire::simulator {
-class SimulatorBase;
+class SimulationLoop;
 }
 namespace sire::core {
 class EventManager;
@@ -26,7 +26,7 @@ class SIRE_API TriggerBase {
   virtual ~TriggerBase() = default;
   ARIS_DEFINE_BIG_FOUR(TriggerBase);
 
-  virtual auto trigger(simulator::SimulatorBase*) -> void = 0;
+  virtual auto trigger(simulator::SimulationLoop*) -> void = 0;
   auto triggerType() const -> std::string { return trigger_type_; }
   auto setTriggerType(const std::string& trigger_type) -> void {
     trigger_type_ = trigger_type;

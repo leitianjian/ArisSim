@@ -14,8 +14,8 @@
 #include <aris.hpp>
 
 namespace sire {
-struct Simulator::Imp {
-  Simulator* simulator_;
+struct SimulationLoop::Imp {
+  SimulationLoop* simulator_;
   aris::server::ControlServer& cs_;
   std::thread retrieve_rt_pm_thread_;
   std::array<double, 7 * 16> link_pm_;
@@ -23,7 +23,7 @@ struct Simulator::Imp {
   std::array<double, 7 * 6> link_pe_;
   std::mutex mu_link_pm_;
 
-  Imp(Simulator* simulator)
+  Imp(SimulationLoop* simulator)
       : simulator_(simulator), cs_(aris::server::ControlServer::instance()) {
     link_pm_ = {
         1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0,
@@ -41,7 +41,7 @@ struct Simulator::Imp {
   Imp(const Imp&) = delete;
 };
 
-Simulator::Simulator(const std::string& cs_config_path) : imp_(new Imp(this)) {
+SimulationLoop::SimulationLoop(const std::string& cs_config_path) : imp_(new Imp(this)) {
   aris::core::fromXmlFile(imp_->cs_, cs_config_path);
   imp_->cs_.init();
   // std::cout << aris::core::toXmlString(imp_->cs_) << std::endl;
@@ -109,17 +109,17 @@ Simulator::Simulator(const std::string& cs_config_path) : imp_(new Imp(this)) {
       std::ref(imp_->mu_link_pm_));
 }
 
-Simulator::~Simulator() {
+SimulationLoop::~SimulationLoop() {
   imp_->cs_.stop();
   imp_->cs_.close();
 }
 
-auto Simulator::GetLinkPM(std::array<double, 7 * 16>& link_pm) -> void {
+auto SimulationLoop::GetLinkPM(std::array<double, 7 * 16>& link_pm) -> void {
   std::lock_guard<std::mutex> guard(imp_->mu_link_pm_);
   link_pm = imp_->link_pm_;
 }
 
-auto Simulator::GetLinkPQ(std::array<double, 7 * 7>& link_pq) -> void {
+auto SimulationLoop::GetLinkPQ(std::array<double, 7 * 7>& link_pq) -> void {
   std::lock_guard<std::mutex> guard(imp_->mu_link_pm_);
   for (int i = 1; i < 7; ++i) {
     aris::dynamic::s_pm2pq(imp_->link_pm_.data() + i * 16,
@@ -129,7 +129,7 @@ auto Simulator::GetLinkPQ(std::array<double, 7 * 7>& link_pq) -> void {
   link_pq = imp_->link_pq_;
 }
 
-auto Simulator::GetLinkPE(std::array<double, 7 * 6>& link_pe) -> void {
+auto SimulationLoop::GetLinkPE(std::array<double, 7 * 6>& link_pe) -> void {
   std::lock_guard<std::mutex> guard(imp_->mu_link_pm_);
   for (int i = 1; i < 7; ++i) {
     aris::dynamic::s_pm2pe(imp_->link_pm_.data() + i * 16,
@@ -138,12 +138,12 @@ auto Simulator::GetLinkPE(std::array<double, 7 * 6>& link_pe) -> void {
   link_pe = imp_->link_pe_;
 }
 
-auto Simulator::instance(const std::string& cs_config_path) -> Simulator& {
-  static Simulator instance(cs_config_path);
+auto SimulationLoop::instance(const std::string& cs_config_path) -> SimulationLoop& {
+  static SimulationLoop instance(cs_config_path);
   return instance;
 }
 
-auto Simulator::SimPlan() -> void {
+auto SimulationLoop::SimPlan() -> void {
   // ·¢ËÍ·ÂÕæ¹ì¼£
   if (imp_->retrieve_rt_pm_thread_.joinable()) {
     auto& cs = aris::server::ControlServer::instance();
@@ -179,7 +179,7 @@ auto Simulator::SimPlan() -> void {
   }
 }
 
-auto Simulator::SimPlan(std::vector<std::array<double, 6>> track_points)
+auto SimulationLoop::SimPlan(std::vector<std::array<double, 6>> track_points)
     -> void {
   // ·¢ËÍ·ÂÕæ¹ì¼£
   if (imp_->retrieve_rt_pm_thread_.joinable()) {
@@ -208,7 +208,7 @@ auto Simulator::SimPlan(std::vector<std::array<double, 6>> track_points)
     return;
   }
 }
-auto Simulator::executeCmd(std::string cmd) -> void {
+auto SimulationLoop::executeCmd(std::string cmd) -> void {
   auto& cs = aris::server::ControlServer::instance();
   try {
     cs.executeCmd(cmd);

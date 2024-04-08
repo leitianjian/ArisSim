@@ -7,7 +7,7 @@
 #include "sire/core/constants.hpp"
 #include "sire/core/event_base.hpp"
 namespace sire::simulator {
-class SimulatorBase;
+class SimulationLoop;
 }
 namespace sire::core {
 class EventManager;
@@ -18,7 +18,7 @@ class SIRE_API HandlerBase {
   virtual ~HandlerBase() = default;
   ARIS_DEFINE_BIG_FOUR(HandlerBase);
 
-  virtual auto init(simulator::SimulatorBase*) -> void = 0;
+  virtual auto init(simulator::SimulationLoop*) -> void = 0;
   virtual auto handle(EventBase*) -> bool = 0;
   auto handlerType() const -> std::string { return handler_type_; }
   auto setHandlerType(const std::string& handler_type) -> void {

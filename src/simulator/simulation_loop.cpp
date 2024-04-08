@@ -1,4 +1,4 @@
-#include "sire/simulator/simulator_base.hpp"
+#include "sire/simulator/simulation_loop.hpp"
 
 #include <aris/core/object.hpp>
 #include <aris/core/reflection.hpp>
@@ -12,13 +12,12 @@
 #include "sire/core/sire_assert.hpp"
 #include "sire/middleware/sire_middleware.hpp"
 #include "sire/sensor/sensor.hpp"
-#include "sire/simulator/simple_event_manager.hpp"
 #include "sire/simulator/simulator_modules.hpp"
 
 namespace sire::simulator {
 using core::TriggerBase, core::EventBase, core::HandlerBase;
 using std::map;
-struct SimulatorBase::Imp {
+struct SimulationLoop::Imp {
   middleware::SireMiddleware* middleware_ptr_;
   physics::PhysicsEngine* physics_engine_ptr_;
   simulator::SimulatorModules* simulator_modules_ptr_;
@@ -60,7 +59,7 @@ struct SimulatorBase::Imp {
 
   // 打洞，读取数据 //
   std::atomic_bool if_get_data_{false}, if_get_data_ready_{false};
-  const std::function<void(aris::server::ControlServer&, SimulatorBase&,
+  const std::function<void(aris::server::ControlServer&, SimulationLoop&,
                            std::any&)>* get_data_func_{nullptr};
   std::any* get_data_{nullptr};
 
@@ -71,13 +70,13 @@ struct SimulatorBase::Imp {
         handler_factory_(&core::HandlerBaseFactory::instance()) {}
 };
 
-SimulatorBase::SimulatorBase() : imp_(new Imp) {}
-SimulatorBase::~SimulatorBase() = default;
-SIRE_DEFINE_MOVE_CTOR_CPP(SimulatorBase);
+SimulationLoop::SimulationLoop() : imp_(new Imp) {}
+SimulationLoop::~SimulationLoop() = default;
+SIRE_DEFINE_MOVE_CTOR_CPP(SimulationLoop);
 
 // 初始化自己掌控的资源和获取挂在其他节点下的资源
 // 需要cs.init()之后手动调用，不会被自动调用
-auto SimulatorBase::init(middleware::SireMiddleware* middleware) -> void {
+auto SimulationLoop::init(middleware::SireMiddleware* middleware) -> void {
   imp_->middleware_ptr_ = middleware;
   SIRE_ASSERT(imp_->middleware_ptr_ != nullptr);
   imp_->physics_engine_ptr_ = &imp_->middleware_ptr_->physicsEngine();
@@ -136,8 +135,8 @@ auto SimulatorBase::init(middleware::SireMiddleware* middleware) -> void {
     }
   });
 }
-auto SimulatorBase::timer() -> core::Timer& { return imp_->timer_; }
-auto SimulatorBase::step(sire::Size frame_skip, bool pause_if_fast) -> void {
+auto SimulationLoop::timer() -> core::Timer& { return imp_->timer_; }
+auto SimulationLoop::step(sire::Size frame_skip, bool pause_if_fast) -> void {
   for (sire::Size i = 0; i < frame_skip; ++i) {
     // Get header event pointer
     core::EventBase* header = imp_->event_manager_->eventListHeader();
@@ -174,7 +173,7 @@ auto SimulatorBase::step(sire::Size frame_skip, bool pause_if_fast) -> void {
     //           << std::endl;
   }
 }
-auto SimulatorBase::start() -> void {
+auto SimulationLoop::start() -> void {
   imp_->is_simulation_running_.store(true);
   imp_->simulation_thread = std::thread([this]() {
     while (imp_->is_simulation_running_ &&
@@ -199,7 +198,7 @@ auto SimulatorBase::start() -> void {
     }
   });
 }
-auto SimulatorBase::createTriggerById(sire::Size trigger_id)
+auto SimulationLoop::createTriggerById(sire::Size trigger_id)
     -> std::unique_ptr<TriggerBase> {
   std::unique_ptr<TriggerBase> new_trigger =
       imp_->trigger_creator_[trigger_id]();
@@ -207,14 +206,14 @@ auto SimulatorBase::createTriggerById(sire::Size trigger_id)
   new_trigger->setTriggerType(imp_->trigger_pool_[trigger_id]);
   return new_trigger;
 }
-auto SimulatorBase::createEventById(sire::Size event_id)
+auto SimulationLoop::createEventById(sire::Size event_id)
     -> std::unique_ptr<EventBase> {
   std::unique_ptr<EventBase> new_event = imp_->event_creator_[event_id]();
   new_event->setEventId(event_id);
   new_event->setEventType(imp_->event_pool_[event_id]);
   return std::move(new_event);
 }
-auto SimulatorBase::createHandlerById(sire::Size handler_id)
+auto SimulationLoop::createHandlerById(sire::Size handler_id)
     -> std::unique_ptr<HandlerBase> {
   std::unique_ptr<HandlerBase> new_handler =
       imp_->handler_creator_[handler_id]();
@@ -222,25 +221,25 @@ auto SimulatorBase::createHandlerById(sire::Size handler_id)
   new_handler->setHandlerType(imp_->handler_pool_[handler_id]);
   return new_handler;
 }
-auto SimulatorBase::createEventByTriggerId(sire::Size trigger_id)
+auto SimulationLoop::createEventByTriggerId(sire::Size trigger_id)
     -> std::unique_ptr<EventBase> {
   return createEventById(
       imp_->event_manager_->getEventIdByTriggerId(trigger_id));
 }
-auto SimulatorBase::createHandlerByEventId(sire::Size event_id)
+auto SimulationLoop::createHandlerByEventId(sire::Size event_id)
     -> std::unique_ptr<HandlerBase> {
   return createHandlerById(
       imp_->event_manager_->getHandlerIdByEventId(event_id));
 }
-inline auto SimulatorBase::model() noexcept -> aris::dynamic::Model* {
+inline auto SimulationLoop::model() noexcept -> aris::dynamic::Model* {
   return imp_->model_ptr_;
 }
-inline auto SimulatorBase::contactPairManager() noexcept
+inline auto SimulationLoop::contactPairManager() noexcept
     -> core::ContactPairManager* {
   return &imp_->contact_pair_manager_;
 }
-auto SimulatorBase::getModelState(
-    const std::function<void(aris::server::ControlServer&, SimulatorBase&,
+auto SimulationLoop::getModelState(
+    const std::function<void(aris::server::ControlServer&, SimulationLoop&,
                              std::any&)>& get_func,
     std::any& get_data) -> void {
   if (!imp_->is_data_fetch_running_)
@@ -256,93 +255,93 @@ auto SimulatorBase::getModelState(
 
   imp_->if_get_data_ready_.store(false);
 }
-// auto SimulatorBase::getModelState(
-//     const std::function<void(aris::server::ControlServer&, SimulatorBase&,
+// auto SimulationLoop::getModelState(
+//     const std::function<void(aris::server::ControlServer&, SimulationLoop&,
 //                              std::any&)>& get_func,
 //     std::any& get_data) -> void {
 //   imp_->event_manager_.getModelState(get_func, get_data);
 // }
-auto SimulatorBase::backupModel() -> void {
+auto SimulationLoop::backupModel() -> void {
   //  aris::core::fromXmlString(*(imp_->model_pool_[1]),
   //                            aris::core::toXmlString(*(imp_->model_pool_[0])));
 }
-auto SimulatorBase::restoreModel() -> void {
+auto SimulationLoop::restoreModel() -> void {
   //  aris::core::fromJsonFile(*(imp_->model_pool_[0]),
   //                           aris::core::toXmlString(*(imp_->model_pool_[1])));
 }
-auto SimulatorBase::integrateAs2Ps() -> void {}
+auto SimulationLoop::integrateAs2Ps() -> void {}
 
-auto SimulatorBase::updateSysTime() -> void {
+auto SimulationLoop::updateSysTime() -> void {
   imp_->current_time_ = std::chrono::system_clock::now();
 }
-auto SimulatorBase::resetIntegratorPoolPtr(IntegratorPool* pool) -> void {
+auto SimulationLoop::resetIntegratorPoolPtr(IntegratorPool* pool) -> void {
   imp_->integrator_pool_ptr_ = pool;
 }
-auto SimulatorBase::integratorPoolPtr() const -> const IntegratorPool* {
+auto SimulationLoop::integratorPoolPtr() const -> const IntegratorPool* {
   return imp_->integrator_pool_ptr_;
 }
-auto SimulatorBase::resetSensorPoolPtr(SensorPool* pool) -> void {
+auto SimulationLoop::resetSensorPoolPtr(SensorPool* pool) -> void {
   imp_->sensor_pool_ptr_ = pool;
 }
-auto SimulatorBase::sensorPoolPtr() const -> const SensorPool* {
+auto SimulationLoop::sensorPoolPtr() const -> const SensorPool* {
   return imp_->sensor_pool_ptr_;
 }
-auto SimulatorBase::resetPhysicsEnginePtr(physics::PhysicsEngine* engine)
+auto SimulationLoop::resetPhysicsEnginePtr(physics::PhysicsEngine* engine)
     -> void {
   imp_->physics_engine_ptr_ = engine;
 }
-auto SimulatorBase::physicsEnginePtr() const -> const physics::PhysicsEngine* {
+auto SimulationLoop::physicsEnginePtr() const -> const physics::PhysicsEngine* {
   return imp_->physics_engine_ptr_;
 }
-auto SimulatorBase::resolveContact() -> void {
+auto SimulationLoop::resolveContact() -> void {
   // imp_->physics_engine_ptr_->handleContact();
 }
-auto SimulatorBase::collisionDetection() -> void {
+auto SimulationLoop::collisionDetection() -> void {
   imp_->physics_engine_ptr_->hasCollision();
 }
-auto SimulatorBase::resetEventManager(core::EventManager* manager) -> void {
+auto SimulationLoop::resetEventManager(core::EventManager* manager) -> void {
   imp_->event_manager_.reset(manager);
 }
-auto SimulatorBase::eventManager() const -> const core::EventManager& {
+auto SimulationLoop::eventManager() const -> const core::EventManager& {
   return *imp_->event_manager_;
 }
-auto SimulatorBase::deltaT() -> double { return imp_->dt_; }
-auto SimulatorBase::setDeltaT(double delta_t_in) -> void {
+auto SimulationLoop::deltaT() -> double { return imp_->dt_; }
+auto SimulationLoop::setDeltaT(double delta_t_in) -> void {
   SIRE_ASSERT(delta_t_in >= 0);
   imp_->dt_ = delta_t_in;
 }
-auto SimulatorBase::targetRealtimeRate() -> double {
+auto SimulationLoop::targetRealtimeRate() -> double {
   return imp_->timer_.targetRealtimeRate();
 }
-auto SimulatorBase::realtimeRate() -> double {
+auto SimulationLoop::realtimeRate() -> double {
   return imp_->timer_.realtimeRate();
 }
-auto SimulatorBase::setRealtimeRate(double rate) -> void {
+auto SimulationLoop::setRealtimeRate(double rate) -> void {
   imp_->timer_.setRealtimeRate(rate);
 }
-auto SimulatorBase::setGlobalVariablePool(core::PropMap& pool) -> void {
+auto SimulationLoop::setGlobalVariablePool(core::PropMap& pool) -> void {
   imp_->global_variable_pool_ = pool;
 }
-auto SimulatorBase::getGlobalVariablePool() const -> const core::PropMap& {
+auto SimulationLoop::getGlobalVariablePool() const -> const core::PropMap& {
   return imp_->global_variable_pool_;
 }
 
 ARIS_REGISTRATION {
-  auto setGlobalVariablePool = [](SimulatorBase* p, core::PropMap map) -> void {
+  auto setGlobalVariablePool = [](SimulationLoop* p, core::PropMap map) -> void {
     p->setGlobalVariablePool(map);
   };
-  auto getGlobalVariablePool = [](SimulatorBase* p) -> core::PropMap {
+  auto getGlobalVariablePool = [](SimulationLoop* p) -> core::PropMap {
     return p->getGlobalVariablePool();
   };
-  typedef core::EventManager& (SimulatorBase::*EventManagerFunc)();
+  typedef core::EventManager& (SimulationLoop::*EventManagerFunc)();
 
-  aris::core::class_<SimulatorBase>("SimulatorBase")
-      .prop("dt", &SimulatorBase::setDeltaT, &SimulatorBase::deltaT)
-      .prop("realtime_rate", &SimulatorBase::setRealtimeRate,
-            &SimulatorBase::realtimeRate)
+  aris::core::class_<SimulationLoop>("SimulationLoop")
+      .prop("dt", &SimulationLoop::setDeltaT, &SimulationLoop::deltaT)
+      .prop("realtime_rate", &SimulationLoop::setRealtimeRate,
+            &SimulationLoop::realtimeRate)
       .prop("global_variable_pool", &setGlobalVariablePool,
             &getGlobalVariablePool)
-      .prop("event_manager", &SimulatorBase::resetEventManager,
-            EventManagerFunc(&SimulatorBase::eventManager));
+      .prop("event_manager", &SimulationLoop::resetEventManager,
+            EventManagerFunc(&SimulationLoop::eventManager));
 }
 }  // namespace sire::simulator
