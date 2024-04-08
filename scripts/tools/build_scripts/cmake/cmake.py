@@ -5,7 +5,7 @@ import multiprocessing
 import os
 import platform
 import sys
-import sysconfig
+import shutil
 from distutils.version import LooseVersion
 from subprocess import CalledProcessError, check_call, check_output
 from typing import Any, cast, Dict, List, Optional
@@ -59,6 +59,14 @@ class CMake:
           string: The path to CMakeCache.txt.
         """
         return os.path.join(self.build_dir, "CMakeCache.txt")
+    @property
+    def _cmake_cache_dir(self) -> str:
+        r"""Returns the path to CMakeFiles directory
+
+        Returns:
+          string: The path to CMakeFiles.
+        """
+        return os.path.join(self.build_dir, "CMakeFiles");
 
     @staticmethod
     def _get_cmake_command(env: os._Environ[str] = os.environ) -> str:
@@ -131,12 +139,16 @@ class CMake:
         # build_python: bool,
         # build_test: bool,
         my_env: Dict[str, str],
-        rerun: bool,
+        reconfig: bool,
+        rm_cache: bool,
     ) -> None:
         "Runs cmake to generate native build files."
 
-        if rerun and os.path.isfile(self._cmake_cache_file):
+        if reconfig and os.path.isfile(self._cmake_cache_file):
             os.remove(self._cmake_cache_file)
+        
+        if rm_cache and os.path.isdir(self._cmake_cache_dir):
+            shutil.rmtree(self._cmake_cache_dir)
 
         ninja_build_file = os.path.join(self.build_dir, "build.ninja")
         if os.path.exists(self._cmake_cache_file) and not (

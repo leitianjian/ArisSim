@@ -82,7 +82,8 @@ def build_sire(
     version: Optional[str],
     # cmake_python_library: Optional[str],
     # build_python: bool,
-    rerun_cmake: bool,
+    rerun_config: bool,
+    rm_cache: bool,
     cmake_only: bool,
     cmake_toolchain_file: Optional[str] = None,
     env: os._Environ[str] = os.environ,
@@ -97,7 +98,7 @@ def build_sire(
                   **kwargs,
                   )
     cmake.configure(
-        env, rerun_cmake
+        env, rerun_config, rm_cache
     )
     if cmake_only:
         return

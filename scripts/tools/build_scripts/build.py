@@ -66,7 +66,9 @@ if __name__ == "__main__":
         type=pathlib.Path,
         help="toolchain setting path (.cmake file)",
     )
-    parser.add_argument('-r', "--rerun-cmake", action="store_true", help="rerun cmake")
+    parser.add_argument('-r', "--rm-cache-reconfig", action="store_true", help="delete cache and reconfigure")
+    parser.add_argument('-rec', "--rerun-config", action="store_true", help="reconfigure")
+    parser.add_argument('-rmc', "--rm-cache", action="store_true", help="remove cmake cache")
     parser.add_argument('-c',
         "--cmake-only",
         action="store_true",
@@ -90,6 +92,10 @@ if __name__ == "__main__":
     if USE_NINJA:
         my_env["CMAKE_GENERATOR"] = "ninja"
 
+    if options.rm_cache_reconfig:
+        options.rerun_config = True
+        options.rm_cache = True
+
     # print(options, str(options.install_dir))
     if options.build_all:
         options.debug = True
@@ -104,7 +110,8 @@ if __name__ == "__main__":
             version=None,
             # cmake_python_library=None,
             # build_python=False,
-            rerun_cmake=options.rerun_cmake,
+            rerun_config=options.rerun_config,
+            rm_cache=options.rm_cache,
             cmake_only=options.cmake_only,
             cmake_toolchain_file=None if options.toolchain_path is None else str(options.toolchain_path),
             env=my_env,
@@ -121,7 +128,8 @@ if __name__ == "__main__":
             version=None,
             # cmake_python_library=None,
             # build_python=False,
-            rerun_cmake=True if options.debug else options.rerun_cmake,
+            rerun_config=True if options.debug else options.rerun_config,
+            rm_cache=True if options.debug else options.rm_cache,
             cmake_only=options.cmake_only,
             cmake_toolchain_file=None if options.toolchain_path is None else str(options.toolchain_path),
             env=my_env,
