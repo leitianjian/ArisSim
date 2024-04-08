@@ -230,6 +230,37 @@ auto PhysicsEngine::cptProximityVelocity(
   aris::dynamic::s_vs(3, vel_A, vel_B);
   return -aris::dynamic::s_vv(3, vel_B, penetration.nhat_AB_W.data());
 }
+auto PhysicsEngine::cptTangentialVelocity(
+    const common::PenetrationAsPointPair& penetration,
+    const std::array<double, 16>& T_contact, std::array<double, 2>& vt)
+    -> void {
+  double vs_A[6], vs_B[6], vel_A[3], vel_B[3];
+  auto* geometry_A = queryGeometryPoolById(penetration.id_A);
+  auto* geometry_B = queryGeometryPoolById(penetration.id_B);
+  SIRE_ASSERT(geometry_A != nullptr && geometry_B != nullptr);
+  imp_->model_ptr_->partPool().at(geometry_A->partId()).getVs(vs_A);
+  imp_->model_ptr_->partPool().at(geometry_B->partId()).getVs(vs_B);
+  aris::dynamic::s_vs2vp(vs_A, penetration.p_WC.data(), vel_A);
+  aris::dynamic::s_vs2vp(vs_B, penetration.p_WC.data(), vel_B);
+  aris::dynamic::s_vs(3, vel_A, vel_B);
+  return;
+}
+auto PhysicsEngine::cptContactVelocityB2A(
+    const common::PenetrationAsPointPair& penetration,
+    const std::array<double, 16>& T_contact, std::array<double, 3>& v_contact)
+    -> void {
+  double vs_A[6], vs_B[6], vel_A[3], vel_B[3];
+  auto* geometry_A = queryGeometryPoolById(penetration.id_A);
+  auto* geometry_B = queryGeometryPoolById(penetration.id_B);
+  SIRE_ASSERT(geometry_A != nullptr && geometry_B != nullptr);
+  imp_->model_ptr_->partPool().at(geometry_A->partId()).getVs(vs_A);
+  imp_->model_ptr_->partPool().at(geometry_B->partId()).getVs(vs_B);
+  aris::dynamic::s_vs2vp(vs_A, penetration.p_WC.data(), vel_A);
+  aris::dynamic::s_vs2vp(vs_B, penetration.p_WC.data(), vel_B);
+  aris::dynamic::s_vs(3, vel_A, vel_B);
+  aris::dynamic::s_inv_pm_dot_v3(T_contact.data(), vel_B, v_contact.data());
+  return;
+}
 auto PhysicsEngine::cptPointPairPenetration(
     std::vector<common::PenetrationAsPointPair>& pairs) -> void {
   imp_->collision_detection_->computePointPairPenetration(pairs);
@@ -262,6 +293,7 @@ auto PhysicsEngine::hasCollision() -> bool {
   if (imp_->collision_detection_flag_) {
     return imp_->collision_detection_->hasCollisions();
   }
+  return false;
 }
 auto PhysicsEngine::computePointPairPenetration()
     -> std::vector<common::PenetrationAsPointPair> {
@@ -274,7 +306,7 @@ auto PhysicsEngine::computePointPairPenetration()
 auto PhysicsEngine::cptContactInfo(
     const std::vector<common::PenetrationAsPointPair>& penetration_pairs,
     std::vector<common::PointPairContactInfo>& contact_info) -> bool {
-  const int num_contacts = penetration_pairs.size();
+  const sire::Size num_contacts = penetration_pairs.size();
   // 使用engine_ptr和当前Model的状态结合Penetration_pair，计算接触信息
   contact::ContactSolverResult solver_result;
   // 每个碰撞点构建的坐标系保存的位置，使用pm保存
@@ -365,15 +397,15 @@ auto PhysicsEngine::resetPartContactForce() -> void {
   for (int i = 0; i < motion_size; ++i) {
     dynamic_cast<SingleComponentForce&>(force_pool.at(i)).setFce(0);
   }
-  for (int i = motion_size; i < part_size + motion_size; ++i) {
+  for (sire::Size i = motion_size; i < part_size + motion_size; ++i) {
     dynamic_cast<GeneralForce&>(force_pool.at(i))
         .setFce(std::array<double, 6>{0, 0, 0, 0, 0, 0}.data());
   }
 }
 auto PhysicsEngine::cptGlbForceByContactInfo(
     const std::vector<common::PointPairContactInfo>& contact_info) -> bool {
-  const int num_contacts = contact_info.size();
-  const int contact_force_offset = imp_->model_ptr_->motionPool().size();
+  const sire::Size num_contacts = contact_info.size();
+  const sire::Size contact_force_offset = imp_->model_ptr_->motionPool().size();
   auto& force_pool = imp_->model_ptr_->forcePool();
   for (int i = 0; i < num_contacts; ++i) {
     const common::PointPairContactInfo& info = contact_info.at(i);
