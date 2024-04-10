@@ -4,4 +4,4 @@
 -v      # verbose level 1
 --exclude-ext=xml
 --include-ext=cpp,hpp
---not-match-d=config|server|ext
+--not-match-d=config|server|ext|trash

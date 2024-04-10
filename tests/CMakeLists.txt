@@ -147,7 +147,6 @@ target_link_libraries(collision_detection_test
 		sire_middleware
 		sire_server
 		sire_integrator
-		sire_transfer
 		${PUB_RELY_LINK_LIB}
 )
 
@@ -174,7 +173,6 @@ target_link_libraries(geometry_serialization_test
 		sire_middleware
 		sire_server
 		sire_integrator
-		sire_transfer
 		${PUB_RELY_LINK_LIB}
 )
 
@@ -202,7 +200,6 @@ target_link_libraries(cam_backend_test
 		sire_middleware
 		sire_server
 		sire_integrator
-		sire_transfer
 		${PUB_RELY_LINK_LIB}
 )
 
@@ -230,7 +227,6 @@ target_link_libraries(cam_backend_collision_test
 		sire_middleware
 		sire_server
 		sire_integrator
-		sire_transfer
 		${PUB_RELY_LINK_LIB}
 )
 

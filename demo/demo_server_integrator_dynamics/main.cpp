@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     cs.executeCmd("md");
     cs.executeCmd("rc");
   } catch (const std::exception& err) {
-    std::cout << "failed to start system, please reboot" << std::endl;
+    std::cout << "failed to start system, please reboot " << err.what() << std::endl;
   }
   // Start Web Socket
   cs.open();
