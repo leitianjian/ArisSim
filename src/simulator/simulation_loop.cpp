@@ -178,23 +178,7 @@ auto SimulationLoop::start() -> void {
   imp_->simulation_thread = std::thread([this]() {
     while (imp_->is_simulation_running_ &&
            imp_->event_manager_->isEventListEmpty()) {
-      // Get header event pointer
-      core::EventBase* header = imp_->event_manager_->eventListHeader();
-      // New handler by event id
-      std::unique_ptr<core::HandlerBase> handler =
-          createHandlerByEventId(header->eventId());
-      handler->init(this);
-      if (handler->handle(header)) {
-        // if (imp_->if_get_data_.exchange(false)) {
-        //   imp_->get_data_func_->operator()(
-        //       aris::server::ControlServer::instance(), *this,
-        //       *imp_->get_data_);
-        //   imp_->if_get_data_ready_.store(true);  // Ô­×Ó²Ù×÷
-        // }
-        imp_->timer_.pauseIfTooFast();
-        imp_->event_manager_->headerNextEvent(1);
-        imp_->event_manager_->popEventListHeader();
-      }
+      step(1, true);
     }
   });
 }
@@ -250,6 +234,7 @@ auto SimulationLoop::getModelState(
   imp_->if_get_data_ready_.store(false);
   imp_->if_get_data_.store(true);
 
+  // spin waitting for get data
   while (!imp_->if_get_data_ready_.load())
     std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
@@ -327,7 +312,8 @@ auto SimulationLoop::getGlobalVariablePool() const -> const core::PropMap& {
 }
 
 ARIS_REGISTRATION {
-  auto setGlobalVariablePool = [](SimulationLoop* p, core::PropMap map) -> void {
+  auto setGlobalVariablePool = [](SimulationLoop* p,
+                                  core::PropMap map) -> void {
     p->setGlobalVariablePool(map);
   };
   auto getGlobalVariablePool = [](SimulationLoop* p) -> core::PropMap {
