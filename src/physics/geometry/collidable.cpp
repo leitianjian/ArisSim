@@ -6,7 +6,7 @@
 #include <string_view>
 #include <unordered_map>
 
-#include <hpp/fcl/bvh/BVH_model.h>
+#include <hpp/fcl/BVH/BVH_model.h>
 #include <hpp/fcl/mesh_loader/assimp.h>
 #include <hpp/fcl/mesh_loader/loader.h>
 #include <hpp/fcl/shape/geometric_shapes.h>

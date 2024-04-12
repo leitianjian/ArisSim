@@ -87,8 +87,8 @@ class SIRE_API SimulationLoop {
   //                                             get_func,
   //                    std::any& get_data) -> void;
 
-  inline auto model() noexcept -> aris::dynamic::Model*;
-  inline auto contactPairManager() noexcept -> core::ContactPairManager*;
+  auto model() noexcept -> aris::dynamic::Model*;
+  auto contactPairManager() noexcept -> core::ContactPairManager*;
 
   auto getModelState(
       const std::function<void(aris::server::ControlServer&, SimulationLoop&,

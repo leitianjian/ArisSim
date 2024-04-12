@@ -120,12 +120,12 @@ auto PhysicsEngine::resetCollisionFilter(collision::CollisionFilter* filter)
 auto PhysicsEngine::collisionFilter() -> collision::CollisionFilter& {
   return *imp_->collision_filter_;
 }
-inline auto PhysicsEngine::resetGeometryPool(
+auto PhysicsEngine::resetGeometryPool(
     aris::core::PointerArray<geometry::CollidableGeometry,
                              aris::dynamic::Geometry>* pool) -> void {
   imp_->geometry_pool_.reset(pool);
 }
-inline auto PhysicsEngine::geometryPool() noexcept
+auto PhysicsEngine::geometryPool() noexcept
     -> aris::core::PointerArray<geometry::CollidableGeometry,
                                 aris::dynamic::Geometry>& {
   return *imp_->geometry_pool_;
@@ -273,7 +273,7 @@ auto PhysicsEngine::resetContactSolver(
 auto PhysicsEngine::contactSolver() const -> const contact::ContactSolver& {
   return *imp_->contact_solver_;
 }
-inline auto PhysicsEngine::numDynamicGeometries() -> sire::Size {
+auto PhysicsEngine::numDynamicGeometries() -> sire::Size {
   return imp_->collision_detection_->numDynamicGeometries();
 }
 auto PhysicsEngine::handleContact() -> void {

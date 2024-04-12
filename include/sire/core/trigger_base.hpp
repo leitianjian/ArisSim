@@ -49,8 +49,8 @@ class SIRE_API TriggerRegister final {
   TriggerRegister() = default;
   ~TriggerRegister() = default;
   static auto registration(const std::string& s, sire::Size id) -> void {
-    BaseFactory<TriggerBase>::instance().registration(s, id,
-                                                      &createTriggerFunc<T>);
+  //  BaseFactory<TriggerBase>::instance().registration(s, id,
+  //                                                    &createTriggerFunc<T>);
   }
 
  private:

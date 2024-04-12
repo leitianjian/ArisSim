@@ -4,9 +4,13 @@ project(sire VERSION 1.0.0)
 
 # set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 
-if(UNIX AND NOT DEFINED CMAKE_INSTALL_PREFIX)
+if(UNIX)
 	set(CMAKE_INSTALL_PREFIX "/usr/sire/sire-1.0")
-endif(UNIX AND NOT DEFINED CMAKE_INSTALL_PREFIX)
+endif(UNIX)
+if (UNIX)
+	add_definitions(-DUNIX)
+	add_definitions(-fPIC)
+endif(UNIX)
 if(WIN32 AND NOT DEFINED CMAKE_INSTALL_PREFIX)
 	set(CMAKE_INSTALL_PREFIX "C:/sire/sire-1.0")
 endif(WIN32 AND NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -147,7 +151,7 @@ target_compile_options(sire_physics
 	PRIVATE 
 		$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 		$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wa,-mbig-obj>
+		# $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wa,-mbig-obj>
 	)
 target_sources(sire_physics 
 	PRIVATE 
@@ -159,7 +163,6 @@ target_sources(sire_physics
 		"src/physics/contact/contact_solver.cpp"
 		"src/physics/contact/stiffness_damping_contact_solver.cpp"
 		"src/physics/contact/continuous_force_contact_solver.cpp"
-		"src/physics/collision/collision.cpp"
 		"src/physics/collision/collision_detection.cpp"
 		"src/physics/collision/collision_filter.cpp"
 		"src/physics/collision/collision_exists_callback.cpp"
@@ -178,7 +181,6 @@ target_sources(sire_physics
 		"include/sire/physics/contact/stiffness_damping_contact_solver.hpp"
 		"include/sire/physics/contact/continuous_force_contact_solver.hpp"
 		"include/sire/physics/contact/contact_solver_result.hpp"
-		"include/sire/physics/collision/collision.hpp"
 		"include/sire/physics/collision/collision_detection.hpp"
 		"include/sire/physics/collision/collision_filter.hpp"
 		"include/sire/physics/collision/collision_exists_callback.hpp"
@@ -240,7 +242,7 @@ target_compile_options(sire_simulator
 	PRIVATE 
 		$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
 		$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wa,-mbig-obj>
+		# $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wa,-mbig-obj>
 	)
 target_compile_features(sire_simulator PUBLIC cxx_std_17)
 target_sources(sire_simulator 
@@ -415,35 +417,35 @@ target_include_directories(sire_sensor
 install(DIRECTORY include/sire/sensor DESTINATION include/sire)
 
 # Build lib CAM backend of sire
-add_library(sire_cam_backend OBJECT)
-target_compile_features(sire_cam_backend PRIVATE cxx_std_17)
-target_compile_definitions(sire_cam_backend PRIVATE sire_lib_EXPORTS)
-target_compile_options(sire_cam_backend
-	PRIVATE 
-		$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
-		$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
-		$<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wa,-mbig-obj>
-	)
-target_sources(sire_cam_backend 
-	PRIVATE 
-		"src/cam_backend/cam_backend.cpp"
-		"src/cam_backend/command.cpp"
-	PUBLIC 
-		"include/sire/cam_backend/cam_backend.hpp"
-		"include/sire/cam_backend/command.hpp"
-	)
-target_include_directories(sire_cam_backend
-	PUBLIC
-		$<INSTALL_INTERFACE:include> 
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		${aris_INCLUDE_DIRS}
-		${hpp-fcl_INCLUDE_DIRS}
-	PRIVATE
-		${PROJECT_SOURCE_DIR}/src
-		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
-		${ASSIMP_INCLUDE_DIRS}
-	)
-install(DIRECTORY include/sire/cam_backend DESTINATION include/sire)
+# add_library(sire_cam_backend OBJECT)
+# target_compile_features(sire_cam_backend PRIVATE cxx_std_17)
+# target_compile_definitions(sire_cam_backend PRIVATE sire_lib_EXPORTS)
+# target_compile_options(sire_cam_backend
+# 	PRIVATE 
+# 		$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
+# 		$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
+# 		# $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wa,-mbig-obj>
+# 	)
+# target_sources(sire_cam_backend 
+# 	PRIVATE 
+# 		"src/cam_backend/cam_backend.cpp"
+# 		"src/cam_backend/command.cpp"
+# 	PUBLIC 
+# 		"include/sire/cam_backend/cam_backend.hpp"
+# 		"include/sire/cam_backend/command.hpp"
+# 	)
+# target_include_directories(sire_cam_backend
+# 	PUBLIC
+# 		$<INSTALL_INTERFACE:include> 
+# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+# 		${aris_INCLUDE_DIRS}
+# 		${hpp-fcl_INCLUDE_DIRS}
+# 	PRIVATE
+# 		${PROJECT_SOURCE_DIR}/src
+# 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
+# 		${ASSIMP_INCLUDE_DIRS}
+# 	)
+# install(DIRECTORY include/sire/cam_backend DESTINATION include/sire)
 
 # Build library for sire
 add_library(sire_lib 
@@ -455,7 +457,6 @@ add_library(sire_lib
 		$<TARGET_OBJECTS:sire_simulator>
 		$<TARGET_OBJECTS:sire_server>
 		$<TARGET_OBJECTS:sire_sensor>
-		$<TARGET_OBJECTS:sire_cam_backend>
 	)
 generate_export_header(sire_lib EXPORT_MACRO_NAME SIRE_API)
 target_compile_features(sire_lib PUBLIC cxx_std_17)

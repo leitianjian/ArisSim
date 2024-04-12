@@ -39,9 +39,13 @@ class SIRE_API EventBaseFactory {
   virtual ~EventBaseFactory() = default;
   EventBaseFactory(const EventBaseFactory&) = delete;
   EventBaseFactory& operator=(const EventBaseFactory&) = delete;
-  Map EventBaseFactory::map_;
-  std::map<EventId, std::string> EventBaseFactory::id_name_pair_;
+  Map map_;
+  std::map<EventId, std::string> id_name_pair_;
 };
+template <typename T>
+auto createEventFunc() -> std::unique_ptr<EventBase> {
+  return std::make_unique<T>();
+}
 template <typename T>
 class EventRegister final {
  public:
@@ -54,11 +58,6 @@ class EventRegister final {
   }
   static auto clear() -> void { EventBaseFactory::instance().clear(); }
 };
-template <typename T>
-auto createEventFunc() -> std::unique_ptr<EventBase> {
-  return std::make_unique<T>();
-}
-
 using HandlerId = sire::Size;
 class SIRE_API HandlerBaseFactory {
   typedef std::map<HandlerId, std::unique_ptr<HandlerBase> (*)()> Map;

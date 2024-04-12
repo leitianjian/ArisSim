@@ -28,6 +28,7 @@ install(
 	DESTINATION 
 		demo/debug/${sire_demo}
 	)
+if(WIN32)
 install(
 	FILES 
 		"${aris_DIR}/../../../lib/${CMAKE_BUILD_TYPE}/aris_lib.dll" 
@@ -36,6 +37,7 @@ install(
 	DESTINATION 
 		demo/debug/${sire_demo}
 )
+endif(WIN32)
 if(${CONFIG_EXISTS})
 	install(DIRECTORY config CONFIGURATIONS Debug DESTINATION demo/debug/${sire_demo})
 endif()
@@ -50,6 +52,7 @@ install(
 	DESTINATION 
 		demo/release/${sire_demo}
 	)
+if(WIN32)
 install(
 	FILES 
 		"${aris_DIR}/../../../lib/${CMAKE_BUILD_TYPE}/aris_lib.dll" 
@@ -58,7 +61,7 @@ install(
 	DESTINATION 
 		demo/release/${sire_demo}
 	)
-
+endif(WIN32)
 # Copy config to install directory
 if(${CONFIG_EXISTS})
 	install(DIRECTORY config CONFIGURATIONS Release DESTINATION demo/release/${sire_demo})

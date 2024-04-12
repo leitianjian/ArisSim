@@ -140,7 +140,7 @@ auto CollisionDetection::collidedObjects(CollidedObjectsCallback& callback_out)
   imp_->dynamic_tree_.collide(&imp_->anchored_tree_, &callback_out);
   return callback_out.data.result.isCollision();
 }
-inline auto CollisionDetection::numDynamicGeometries() -> sire::Size {
+auto CollisionDetection::numDynamicGeometries() -> sire::Size {
   return imp_->dynamic_tree_.size();
 }
 auto CollisionDetection::init(physics::PhysicsEngine* engine_ptr) -> void {

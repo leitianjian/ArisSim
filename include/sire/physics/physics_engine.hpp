@@ -45,10 +45,10 @@ class SIRE_API PhysicsEngine {
   auto collisionFilter() -> collision::CollisionFilter&;
 
   // geometry pool
-  inline auto resetGeometryPool(
+  auto resetGeometryPool(
       aris::core::PointerArray<geometry::CollidableGeometry,
                                aris::dynamic::Geometry>* pool) -> void;
-  inline auto geometryPool() noexcept
+  auto geometryPool() noexcept
       -> aris::core::PointerArray<geometry::CollidableGeometry,
                                   aris::dynamic::Geometry>&;
 
@@ -92,7 +92,7 @@ class SIRE_API PhysicsEngine {
 
   // engine state getter
   inline auto numGeometries() -> sire::Size { return geometryPool().size(); }
-  inline auto numDynamicGeometries() -> sire::Size;
+  auto numDynamicGeometries() -> sire::Size;
 
   // engine state control
   auto doInit() -> void;

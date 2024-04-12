@@ -236,11 +236,11 @@ add_custom_command(TARGET collision_detection_test POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:collision_detection_test> $<TARGET_FILE_DIR:collision_detection_test>
   COMMAND_EXPAND_LISTS
 )
-
+if(WIN32)
 add_custom_command(TARGET collision_detection_test POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy "${TARGET_HPP_FCL_PATH}/bin/hpp-fcl.dll" $<TARGET_FILE_DIR:collision_detection_test>
 )
-
+endif(WIN32)
 add_custom_command(TARGET collision_detection_test POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E echo 
   "target runtime dll = $<TARGET_RUNTIME_DLLS:collision_detection_test>")

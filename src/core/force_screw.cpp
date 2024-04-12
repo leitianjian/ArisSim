@@ -4,23 +4,23 @@
 
 namespace sire::core::screw {
 using namespace aris::dynamic;
-auto inline default_f() noexcept -> const double* {
+auto default_f() noexcept -> const double* {
   static const double value[3]{0, 0, 0};
   return value;
 }
-auto inline default_pe() noexcept -> const double* {
+auto default_pe() noexcept -> const double* {
   static const double value[6]{0, 0, 0, 0, 0, 0};
   return value;
 }
-auto inline default_fs() noexcept -> const double* {
+auto default_fs() noexcept -> const double* {
   static const double value[6]{0, 0, 0, 0, 0, 0};
   return value;
 }
-auto inline default_pm() noexcept -> const double* {
+auto default_pm() noexcept -> const double* {
   static const double value[16]{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
   return value;
 }
-auto inline default_out() noexcept -> double* {
+auto default_out() noexcept -> double* {
   static thread_local double value[36]{0};
   return value;
 }

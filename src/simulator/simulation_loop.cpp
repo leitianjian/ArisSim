@@ -215,10 +215,10 @@ auto SimulationLoop::createHandlerByEventId(sire::Size event_id)
   return createHandlerById(
       imp_->event_manager_->getHandlerIdByEventId(event_id));
 }
-inline auto SimulationLoop::model() noexcept -> aris::dynamic::Model* {
+auto SimulationLoop::model() noexcept -> aris::dynamic::Model* {
   return imp_->model_ptr_;
 }
-inline auto SimulationLoop::contactPairManager() noexcept
+auto SimulationLoop::contactPairManager() noexcept
     -> core::ContactPairManager* {
   return &imp_->contact_pair_manager_;
 }

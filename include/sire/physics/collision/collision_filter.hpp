@@ -35,9 +35,9 @@ class SIRE_API CollisionFilter {
   auto canCollideWith(GeometryId id_1, GeometryId id_2) -> bool;
   auto canCollideWith(const fcl::CollisionObject* o1,
                       const fcl::CollisionObject* o2) -> bool;
-  inline auto queryGeometryIdByPtr(const fcl::CollisionGeometry* ptr)
+  auto queryGeometryIdByPtr(const fcl::CollisionGeometry* ptr)
       -> GeometryId;
-  inline auto queryGeometryIdByPtr(fcl::CollisionGeometry* ptr) -> GeometryId;
+  auto queryGeometryIdByPtr(fcl::CollisionGeometry* ptr) -> GeometryId;
   auto containsGeometry(GeometryId id) -> bool;
   auto setStateMat(aris::core::Matrix mat) -> void;
   auto stateMat() -> aris::core::Matrix;

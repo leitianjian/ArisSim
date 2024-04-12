@@ -5,7 +5,7 @@
 #include <string>
 #include <string_view>
 
-#include <hpp/fcl/bvh/BVH_model.h>
+#include <hpp/fcl/BVH/BVH_model.h>
 #include <hpp/fcl/mesh_loader/assimp.h>
 #include <hpp/fcl/mesh_loader/loader.h>
 #include <hpp/fcl/shape/geometric_shapes.h>
@@ -21,10 +21,10 @@ auto CollidableGeometry::updateLocation(const double* prt_pm) -> void {
   double res[16]{0};
   aris::dynamic::s_pm_dot_pm(prt_pm, *pm(), res);
   getCollisionObject()->setTransform(
-      fcl::Transform3f(fcl::Matrix3f{{res[0], res[1], res[2]},
-                                     {res[4], res[5], res[6]},
-                                     {res[8], res[9], res[10]}},
-                       fcl::Vec3f{res[3], res[7], res[11]}));
+      fcl::Transform3f((fcl::Matrix3f() << res[0], res[1], res[2],
+                                           res[4], res[5], res[6],
+                                           res[8], res[9], res[10]).finished(),
+                       (fcl::Vec3f() << res[3], res[7], res[11]).finished()));
   getCollisionObject()->computeAABB();
 }
 auto CollidableGeometry::init() -> void {}
