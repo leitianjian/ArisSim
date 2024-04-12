@@ -39,6 +39,8 @@ FILES
 	"${assimp_DIR}/../../debug/bin/assimp-vc${MSVC_TOOLSET_VERSION}-mtd.dll"
 	"${assimp_DIR}/../../debug/bin/zlibd1.dll"
 	"${assimp_DIR}/../../debug/bin/pugixml.dll"
+	"${assimp_DIR}/../../debug/bin/boost_serialization-vc${MSVC_TOOLSET_VERSION}-mt-gd-x64-1_81.dll"
+	"${assimp_DIR}/../../debug/bin/boost_filesystem-vc${MSVC_TOOLSET_VERSION}-mt-gd-x64-1_81.dll"
 CONFIGURATIONS
 	Debug
 DESTINATION 
@@ -65,6 +67,8 @@ install(
 		"${assimp_DIR}/../../bin/assimp-vc${MSVC_TOOLSET_VERSION}-mt.dll"
 		"${assimp_DIR}/../../bin/zlib1.dll"
 		"${assimp_DIR}/../../bin/pugixml.dll"
+		"${assimp_DIR}/../../bin/boost_serialization-vc${MSVC_TOOLSET_VERSION}-mt-x64-1_81.dll"
+		"${assimp_DIR}/../../bin/boost_filesystem-vc${MSVC_TOOLSET_VERSION}-mt-x64-1_81.dll"
 	CONFIGURATIONS
 		Release
 	DESTINATION 
