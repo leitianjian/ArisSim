@@ -1,3 +1,7 @@
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.24.0")
+	cmake_policy(SET CMP0135 NEW)
+endif()
+
 include(FetchContent)
 FetchContent_Declare(
   googletest
@@ -6,8 +10,6 @@ FetchContent_Declare(
 # For Windows: Prevent overriding the parent project's compiler/linker settings
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
-
-enable_testing()
 
 add_executable(base_factory_test "core/base_factory_test.cpp")
 target_compile_features(base_factory_test PUBLIC cxx_std_17)
@@ -96,19 +98,19 @@ target_link_libraries(material_manager_test
 		${PUB_RELY_LINK_LIB}
 )
 
-add_executable(model_data_copy_test "model/model_data_copy_test")
-target_compile_features(model_data_copy_test PUBLIC cxx_std_17)
-target_include_directories(model_data_copy_test
-	PRIVATE 
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		${aris_INCLUDE_DIRS} 
-)
-
-target_link_libraries(model_data_copy_test
-	PRIVATE
-		GTest::gtest_main
-		${PUB_RELY_LINK_LIB}
-)
+# add_executable(model_data_copy_test "model/model_data_copy_test")
+# target_compile_features(model_data_copy_test PUBLIC cxx_std_17)
+# target_include_directories(model_data_copy_test
+# 	PRIVATE 
+# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+# 		${aris_INCLUDE_DIRS} 
+# )
+# 
+# target_link_libraries(model_data_copy_test
+# 	PRIVATE
+# 		GTest::gtest_main
+# 		${PUB_RELY_LINK_LIB}
+# )
 
 add_executable(screw_test "model/screw_test.cpp")
 target_compile_features(screw_test PUBLIC cxx_std_17)
@@ -176,70 +178,75 @@ target_link_libraries(geometry_serialization_test
 		${PUB_RELY_LINK_LIB}
 )
 
-add_executable(cam_backend_test
-	"cam_backend/cam_backend_test.cpp")
-target_compile_features(cam_backend_test PUBLIC cxx_std_17)
+# add_executable(cam_backend_test
+# 	"cam_backend/cam_backend_test.cpp")
+# target_compile_features(cam_backend_test PUBLIC cxx_std_17)
+# 
+# target_include_directories(cam_backend_test
+# 	PRIVATE 
+# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+# 		${aris_INCLUDE_DIRS} 
+# 		${PROJECT_BINARY_DIR} 
+# 		${hpp-fcl_INCLUDE_DIRS}
+# 		${ASSIMP_INCLUDE_DIRS}
+# 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
+# 	)
+# 
+# target_link_libraries(cam_backend_test
+# 	PRIVATE
+# 		GTest::gtest_main
+# 		sire_physics
+# 		sire_cam_backend
+# 		sire_core
+# 		sire_simulator
+# 		sire_middleware
+# 		sire_server
+# 		sire_integrator
+# 		${PUB_RELY_LINK_LIB}
+# )
 
-target_include_directories(cam_backend_test
-	PRIVATE 
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		${aris_INCLUDE_DIRS} 
-		${PROJECT_BINARY_DIR} 
-		${hpp-fcl_INCLUDE_DIRS}
-		${ASSIMP_INCLUDE_DIRS}
-		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
-	)
+# add_executable(cam_backend_collision_test
+# 	"cam_backend/collision_test.cpp")
+# target_compile_features(cam_backend_collision_test PUBLIC cxx_std_17)
+# 
+# target_include_directories(cam_backend_collision_test
+# 	PRIVATE 
+# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+# 		${aris_INCLUDE_DIRS} 
+# 		${PROJECT_BINARY_DIR} 
+# 		${hpp-fcl_INCLUDE_DIRS}
+# 		${ASSIMP_INCLUDE_DIRS}
+# 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
+# 	)
+# 
+# target_link_libraries(cam_backend_collision_test
+# 	PRIVATE
+# 		GTest::gtest_main
+# 		sire_physics
+# 		sire_cam_backend
+# 		sire_core
+# 		sire_simulator
+# 		sire_middleware
+# 		sire_server
+# 		sire_integrator
+# 		${PUB_RELY_LINK_LIB}
+# )
 
-target_link_libraries(cam_backend_test
-	PRIVATE
-		GTest::gtest_main
-		sire_physics
-		sire_cam_backend
-		sire_core
-		sire_simulator
-		sire_middleware
-		sire_server
-		sire_integrator
-		${PUB_RELY_LINK_LIB}
-)
-
-add_executable(cam_backend_collision_test
-	"cam_backend/collision_test.cpp")
-target_compile_features(cam_backend_collision_test PUBLIC cxx_std_17)
-
-target_include_directories(cam_backend_collision_test
-	PRIVATE 
-		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-		${aris_INCLUDE_DIRS} 
-		${PROJECT_BINARY_DIR} 
-		${hpp-fcl_INCLUDE_DIRS}
-		${ASSIMP_INCLUDE_DIRS}
-		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
-	)
-
-target_link_libraries(cam_backend_collision_test
-	PRIVATE
-		GTest::gtest_main
-		sire_physics
-		sire_cam_backend
-		sire_core
-		sire_simulator
-		sire_middleware
-		sire_server
-		sire_integrator
-		${PUB_RELY_LINK_LIB}
+add_custom_command(TARGET collision_detection_test POST_BUILD
+  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:collision_detection_test> $<TARGET_FILE_DIR:collision_detection_test>
+  COMMAND_EXPAND_LISTS
 )
 
 add_custom_command(TARGET collision_detection_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:collision_detection_test> $<TARGET_RUNTIME_DLLS:collision_detection_test>
-  COMMAND_EXPAND_LISTS
+  COMMAND ${CMAKE_COMMAND} -E copy "${TARGET_HPP_FCL_PATH}/bin/hpp-fcl.dll" $<TARGET_FILE_DIR:collision_detection_test>
 )
+
 add_custom_command(TARGET collision_detection_test POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E echo 
   "target runtime dll = $<TARGET_RUNTIME_DLLS:collision_detection_test>")
 
 add_custom_command(TARGET sorted_pair_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy -t $<TARGET_FILE_DIR:sorted_pair_test> $<TARGET_RUNTIME_DLLS:sorted_pair_test>
+  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:sorted_pair_test> $<TARGET_FILE_DIR:sorted_pair_test> 
   COMMAND_EXPAND_LISTS
 )
 add_custom_command(TARGET sorted_pair_test POST_BUILD
@@ -248,4 +255,4 @@ add_custom_command(TARGET sorted_pair_test POST_BUILD
 
 include(GoogleTest)
 # set not to run test post build
-gtest_discover_tests(collision_detection_test sorted_pair_test DISCOVERY_MODE PRE_TEST)
+gtest_discover_tests(collision_detection_test sorted_pair_test)

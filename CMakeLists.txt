@@ -527,7 +527,8 @@ if(BUILD_DEMOS)
 endif(BUILD_DEMOS)
 
 # ---------------------- build tests ---------------------------
-option(BUILD_TESTS "build sire tests" OFF)
-if(BUILD_TESTS)
-	add_subdirectory(tests)
-endif(BUILD_TESTS)
+option(BUILD_TEST "build sire tests" OFF)
+if(BUILD_TEST)
+	enable_testing()
+	add_subdirectory(test)
+endif(BUILD_TEST)
