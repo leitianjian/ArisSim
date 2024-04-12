@@ -26,8 +26,8 @@ auto PenetrationAsPointPairCallback::calcDistance(
   // NOTE: This assumes that the request is configured to use a single contact.
   const fcl::Contact& contact = result.getContact(0);
 
-  // Signed distance is negative when penetration depth is positive.
-  const double depth = contact.penetration_depth;
+  // Signed distance.
+  const double depth = std::abs(contact.penetration_depth);
 
   // TODO(leitianjian): Remove this test when FCL issue 375 is fixed.
   // FCL returns osculation as contact but doesn't guarantee a non-zero
