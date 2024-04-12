@@ -132,11 +132,11 @@ auto PhysicsEngine::geometryPool() noexcept
 }
 auto PhysicsEngine::queryGeometryPoolById(const GeometryId& id) const
     -> geometry::CollidableGeometry* {
-  if (auto& it = imp_->dynamic_objects_map_.find(id);
+  if (auto it = imp_->dynamic_objects_map_.find(id);
       it != imp_->dynamic_objects_map_.end()) {
     return it->second;
   }
-  if (auto& it = imp_->anchored_objects_map_.find(id);
+  if (auto it = imp_->anchored_objects_map_.find(id);
       it != imp_->anchored_objects_map_.end()) {
     return it->second;
   }
