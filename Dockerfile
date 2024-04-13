@@ -54,7 +54,7 @@ RUN cd ~/code \
 
 # clone sire and build install
 RUN cd ~/code \
-      && git clone --single-branch --branch simulator_control https://github.com/leitianjian/sire.git \
+      && git clone --single-branch --branch dev https://github.com/leitianjian/sire.git \
       && cd sire \
       && mkdir build \
       && cd build \
