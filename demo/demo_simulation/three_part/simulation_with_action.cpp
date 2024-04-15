@@ -40,7 +40,7 @@ auto SimulationWithAction::prepareNrt() -> void {
   par.general_motion_v.resize(model()->generalMotionPool().size()); // size = 1
   auto& cs = *controlServer();
   auto& middleware = dynamic_cast<middleware::SireMiddleware&>(cs.middleWare());
-  auto& simulator = middleware.simulatorBase();
+  auto& simulator = middleware.simulationLoop();
   uint32_t reset_flag = 0;
   uint32_t delay = 0;
   std::vector<double> position;
@@ -62,7 +62,7 @@ auto SimulationWithAction::prepareNrt() -> void {
    
     } else if (cmd_param.first == "frame_skip") {
       sire::Size temp = uint64Param(cmd_param.first);
-      imp_->frame_skip_ = temp;
+      imp_->frame_skip_ = (uint32_t) temp;
 
     } else if (cmd_param.first == "reset") {
       reset_flag = uint32Param(cmd_param.first);
