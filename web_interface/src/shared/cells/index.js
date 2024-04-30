@@ -22,6 +22,7 @@ import ConnectedCodeEditor from "./CodeEditor/code_editor";
 import ConnectedProgramLib from "./ProgramLib/ProgramLib";
 import ConnectedManualDrag from "./ManualDrag/ManualDrag";
 import RecordingMode from "./RecordingMode/RecordingMode";
+import sizedDisplay from "./Display3d/Display3d";
 
 export default {
   Blockly,
@@ -38,6 +39,7 @@ export default {
   Unknown,
   //ViewThree,
   ViewThree2,
+  sizedDisplay,
   ConnectedLogDisplay,
   ExperCell,
   ConnectedSixDimensionForce,

@@ -3,6 +3,9 @@ import memoize from "lodash/memoize";
 import isNumber from "lodash/isNumber";
 import isArray from "lodash/isArray";
 import { Model } from "../ethercat/Model";
+import { Display3dConfig } from "~/shared/cells/Display3d/types";
+import { RobotState, RootState } from "./reducers";
+import { Matrix4Array, SireGeometry } from "~/types/lib";
 
 // hash equal //
 const hashFn = (...args: any): string => {
@@ -301,10 +304,10 @@ export const GetPartsPath = createSelector(getXml, (xml) => {
   return null;
 });
 
-export const getGeometryPool = (state: any): any => state.robot.geometry_pool;
-export const getGeometryPm = (state: any): any => state.robot.geometry_pm;
-export const getPartPQInit = (state: any): any => state.robot.part_pq_init;
-export const getViewerConfig = (state: any, defaultConfig: any): any => {
+export const getGeometryPool = (state: RootState): SireGeometry[] | null => state.robot.geometry_pool;
+export const getGeometryPm = (state: RootState): Matrix4Array[] | null => state.robot.geometry_pm;
+export const getPartPQInit = (state: RootState): number[][] | null => state.robot.part_pq_init;
+export const getViewerConfig = (state: RootState, defaultConfig: Display3dConfig): Display3dConfig => {
   if (state.robot.viewerConfig == null) {
     return defaultConfig;
   } else {

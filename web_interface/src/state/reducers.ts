@@ -1,9 +1,10 @@
 import { END } from "@redux-saga/types";
 import { combineReducers, PayloadAction } from "@reduxjs/toolkit";
 import { number } from "prop-types";
-import { DashboardConfig, GeometryBase } from "~/types/lib";
+import { DashboardConfig, Matrix4Array, SireGeometry } from "~/types/lib";
 
 import * as ActionTypes from "./constants";
+import { Display3dConfig } from "~/shared/cells/Display3d/types";
 
 let currentToolId = 0;
 const toolIdStr: string | null = window.localStorage.getItem("currentToolId");
@@ -42,8 +43,9 @@ export interface RobotState {
   readonly esiPath: string | null;
   readonly xml: string | null;
   readonly part_pq_init: number[][] | null;
-  readonly geometry_pm: number[][] | null;
-  readonly geometry_pool: GeometryBase[] | null;
+  readonly geometry_pm: Matrix4Array[] | null;
+  readonly geometry_pool: SireGeometry[] | null;
+  readonly viewerConfig: Display3dConfig | null;
   readonly creatingRobotModel: boolean;
   readonly creatingRobotModelError: string | null;
   readonly creatingRobotModelResult: string | null;
@@ -107,9 +109,10 @@ const robotInitState: RobotState = {
   esiPath: null,
 
   xml: null,
-  part_pq_init: [[]],
-  geometry_pm: [[]],
+  part_pq_init: [],
+  geometry_pm: [],
   geometry_pool: [],
+  viewerConfig: null,
 
   creatingRobotModel: false,
   creatingRobotModelError: null,
@@ -137,7 +140,7 @@ const robotInitState: RobotState = {
   deletingProgramSuccess: null,
 
   editingProgramName: null,
-
+  
   // detechs
   fetchingObjPictureList: false,
   fetchingObjPictureListError: null,

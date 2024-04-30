@@ -146,8 +146,8 @@ export const sendCmd = (
 
 export const sendCmdSilence = (
   cmd: string,
-  successCallback: Function,
-  failCallback: Function
+  successCallback?: Function,
+  failCallback?: Function
 ): PayloadAction<any, string> => {
   return action(actions.SendCmdSilenceAction, { cmd, successCallback, failCallback });
 };
@@ -192,7 +192,7 @@ export const updatePartPQFailure = (
 ): PayloadAction<string, string> =>
   action(actions.UpdatePartPQFailureAction, error);
 
-export const display3dInitRequest = (payload: any): PayloadAction<any, string> => action(actions.Display3dInitRequestAction);
+export const display3dInitRequest = (): PayloadAction<any, string> => action(actions.Display3dInitRequestAction);
 export const display3dInitSuccess = (
   result: any
 ): PayloadAction<any, string> =>

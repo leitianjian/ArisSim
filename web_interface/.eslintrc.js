@@ -7,6 +7,7 @@ module.exports = {
     "plugin:react/recommended",
     "standard-with-typescript",
     "plugin:prettier/recommended",
+    "@babel/plugin-transform-private-property-in-object",
     "prettier",
   ],
   overrides: [],

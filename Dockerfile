@@ -1,4 +1,4 @@
-FROM        ubuntu:focal
+FROM ubuntu:focal
 
 # update source list
 RUN sed -i s@/archive.ubuntu.com/@/mirrors.tuna.tsinghua.edu.cn/@g /etc/apt/sources.list \
