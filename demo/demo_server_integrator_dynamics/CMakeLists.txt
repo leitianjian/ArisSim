@@ -1,6 +1,8 @@
 file(GLOB SOURCES *.h *.hpp *.cpp)
 set(sire_demo "demo_server_integrator_dynamics")
 set(CONFIG_EXISTS ON)
+set(INSTALL_DESTINATION demo/${CMAKE_BUILD_TYPE_LOWER}/${sire_demo})
+
 add_executable(${sire_demo} ${SOURCES})
 target_compile_features(${sire_demo} PUBLIC cxx_std_17)
 target_include_directories(${sire_demo} 
@@ -20,51 +22,17 @@ target_link_libraries(${sire_demo}
 		sire_sensor
 		${PUB_RELY_LINK_LIB}
 	)
-# DEBUG INSTALL 
+
 install(
-	TARGETS 
-		sire_lib 
-		${sire_demo} 
-	CONFIGURATIONS
-		Debug
-	DESTINATION 
-		demo/debug/${sire_demo}
-	)
-if(WIN32)
-install(
-	FILES 
-		"${aris_DIR}/../../../lib/${CMAKE_BUILD_TYPE}/aris_lib.dll" 
-	CONFIGURATIONS
-		Debug
-	DESTINATION 
-		demo/debug/${sire_demo}
+	TARGETS
+		sire_lib
+		${sire_demo}
+	DESTINATION
+		${INSTALL_DESTINATION}
 )
-endif(WIN32)
+
 if(${CONFIG_EXISTS})
-	install(DIRECTORY config CONFIGURATIONS Debug DESTINATION demo/debug/${sire_demo})
+	install(DIRECTORY config DESTINATION ${INSTALL_DESTINATION})
 endif()
 
-# RELEASE INSTALL
-install(
-	TARGETS 
-		sire_lib 
-		${sire_demo} 
-	CONFIGURATIONS
-		Release
-	DESTINATION 
-		demo/release/${sire_demo}
-	)
-if(WIN32)
-install(
-	FILES 
-		"${aris_DIR}/../../../lib/${CMAKE_BUILD_TYPE}/aris_lib.dll" 
-	CONFIGURATIONS
-		Release
-	DESTINATION 
-		demo/release/${sire_demo}
-	)
-endif(WIN32)
-# Copy config to install directory
-if(${CONFIG_EXISTS})
-	install(DIRECTORY config CONFIGURATIONS Release DESTINATION demo/release/${sire_demo})
-endif()
+INSTALL_DLL(DESTINATION ${INSTALL_DESTINATION})

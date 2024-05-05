@@ -20,53 +20,18 @@ if(WIN32)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /wd4251 /wd4819")
 endif(WIN32)
 
-# Make sure kaanh and aris can be found
-# if(UNIX)
-# 	set(TARGET_ARIS_PATH /usr/aris CACHE PATH "Aris install path")
-# 	set(TARGET_KAANH_PATH /usr/kaanh CACHE PATH "Kaanh install path")
-# endif(UNIX)
-# if(WIN32)
-# 	set(TARGET_ARIS_PATH C:/aris CACHE PATH "Aris install path")
-# endif(WIN32)
+include(cmake_macros/base.cmake)
 
-# Find kaanh and aris
-if(EXISTS ${TARGET_ARIS_PATH})
-	message(STATUS "Directory to search aris at ${TARGET_ARIS_PATH}")
-	list(APPEND CMAKE_PREFIX_PATH ${TARGET_ARIS_PATH})
-else()
-	message(WARNING "File/Directory at variable TARGET_ARIS_PATH not exists!")
-endif()
-find_package(aris REQUIRED)
+find_pkg_path(aris aris)
 
-# if(EXISTS ${TARGET_KAANH_PATH})
-# 	message(STATUS "Directory to search kaanh at ${TARGET_KAANH_PATH}")
-# 	list(APPEND CMAKE_PREFIX_PATH ${TARGET_KAANH_PATH})
-# else()
-# 	message(WARNING "File/Directory at variable KAANH_INSTALL_PATH not exists!")
-# endif()
-# find_package(kaanh)
+find_pkg_path(assimp assimp)
 
-# find Assimp
-set(TARGET_ASSIMP_PATH "" CACHE PATH "Assimp install path")
-if(EXISTS ${TARGET_ASSIMP_PATH})
-	message(STATUS "Directory to search Assimp at ${TARGET_ASSIMP_PATH}")
-	list(APPEND CMAKE_PREFIX_PATH ${TARGET_ASSIMP_PATH})
-else()
-	message(WARNING "File/Directory at variable TARGET_ASSIMP_PATH not exists!")
-endif()
-find_package(assimp REQUIRED)
+find_pkg_path(hpp-fcl hpp_fcl)
 
-set(TARGET_HPP_FCL_PATH "" CACHE PATH "Hpp-fcl install path")
-# find Hpp-fcl
-if(EXISTS ${TARGET_HPP_FCL_PATH})
-	message(STATUS "Directory to search hpp-fcl at ${TARGET_HPP_FCL_PATH}")
-	list(APPEND CMAKE_PREFIX_PATH ${TARGET_HPP_FCL_PATH})
-else()
-	message(WARNING "File/Directory at variable TARGET_HPP_FCL_PATH not exists!")
-endif()
-find_package(hpp-fcl REQUIRED)
+find_pkg_path(msgpack-cxx msgpack_cxx)
 
 include(GenerateExportHeader)
+
 add_library(sire_core OBJECT)
 target_compile_definitions(sire_core PRIVATE sire_lib_EXPORTS)
 target_compile_features(sire_core PUBLIC cxx_std_17)
@@ -169,8 +134,9 @@ target_sources(sire_physics
 		"src/physics/collision/collided_objects_callback.cpp"
 		"src/physics/collision/penetration_as_point_pair_callback.cpp"
 		"src/physics/common/point_pair_contact_info.cpp"
+		"src/physics/common/motion_force.cpp"
 		"src/physics/physics_engine.cpp"
-		"src/physics/utils.cpp"
+		# "src/physics/utils.cpp"
 	PUBLIC 
 		"include/sire/physics/geometry/collidable.hpp"
 		"include/sire/physics/geometry/collidable_geometry.hpp"
@@ -188,9 +154,10 @@ target_sources(sire_physics
 		"include/sire/physics/collision/penetration_as_point_pair_callback.hpp"
 		"include/sire/physics/common/penetration_as_point_pair.hpp"
 		"include/sire/physics/common/point_pair_contact_info.hpp"
+		"include/sire/physics/common/motion_force.hpp"
 		"include/sire/physics/physics_engine.hpp"
 		"include/sire/physics/physics.hpp"
-		"include/sire/physics/utils.hpp"
+		# "include/sire/physics/utils.hpp"
 	)
 target_include_directories(sire_physics
 	PUBLIC
@@ -249,10 +216,12 @@ target_sources(sire_simulator
 	PRIVATE 
 		"src/simulator/simulation_loop.cpp"
 		"src/simulator/events.cpp"
+		"src/simulator/simulation_result.cpp"
 		"src/simulator/simulator_modules.cpp"
 	PUBLIC 
 		"include/sire/simulator/simulation_loop.hpp"
 		"include/sire/simulator/events.hpp"
+		"include/sire/simulator/simulation_result.hpp"
 		"include/sire/simulator/simulator_modules.hpp"
 	)
 
@@ -346,56 +315,6 @@ target_include_directories(sire_middleware
 	)
 install(DIRECTORY include/sire/middleware DESTINATION include/sire)
 
-# add_library(sire_controller OBJECT)
-# target_compile_definitions(sire_controller PRIVATE sire_lib_EXPORTS)
-# target_compile_features(sire_controller PUBLIC cxx_std_17)
-# target_sources(sire_controller 
-# 	PRIVATE 
-# 		"src/controller/controller_sensor.cpp"
-# 	PUBLIC 
-# 		"include/sire/controller/controller_sensor.hpp"
-# 		"include/sire/controller/controller.hpp"
-# 		"include/sire/ext/json.hpp"
-# 	)
-# target_include_directories(sire_controller
-# 	PUBLIC
-# 		$<INSTALL_INTERFACE:include> 
-# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-# 		${aris_INCLUDE_DIRS}
-# 	PRIVATE
-# 		${PROJECT_SOURCE_DIR}/src
-# 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
-# 	)
-# install(DIRECTORY include/sire/controller DESTINATION include/sire)
-
-# add_library(sire_transfer OBJECT)
-# target_compile_definitions(sire_transfer PRIVATE sire_lib_EXPORTS)
-# target_compile_features(sire_transfer PUBLIC cxx_std_17)
-# target_sources(sire_transfer 
-# 	PRIVATE 
-# 		"src/transfer/force_control_simulation_transfer.cpp"
-# 		"src/transfer/simulation_transfer.cpp"
-# 		"src/transfer/part_pq_transfer.cpp"
-# #		"src/transfer/virtual_force_sensor_transfer.cpp"
-# 	PUBLIC 
-# 		"include/sire/transfer/force_control_simulation_transfer.hpp"
-# 		"include/sire/transfer/simulation_transfer.hpp"
-# 		"include/sire/transfer/part_pq_transfer.hpp"
-# #		"include/sire/transfer/virtual_force_sensor_transfer.hpp"
-# 	)
-# target_include_directories(sire_transfer
-# 	PUBLIC
-# 		$<INSTALL_INTERFACE:include> 
-# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-# 		${aris_INCLUDE_DIRS}
-# 		${hpp-fcl_INCLUDE_DIRS}
-# 	PRIVATE
-# 		${PROJECT_SOURCE_DIR}/src
-# 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
-# 		${ASSIMP_INCLUDE_DIRS}
-# 	)
-# install(DIRECTORY include/sire/transfer DESTINATION include/sire)
-
 add_library(sire_sensor OBJECT)
 target_compile_definitions(sire_sensor PRIVATE sire_lib_EXPORTS)
 target_compile_features(sire_sensor PUBLIC cxx_std_17)
@@ -415,37 +334,6 @@ target_include_directories(sire_sensor
 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
 	)
 install(DIRECTORY include/sire/sensor DESTINATION include/sire)
-
-# Build lib CAM backend of sire
-# add_library(sire_cam_backend OBJECT)
-# target_compile_features(sire_cam_backend PRIVATE cxx_std_17)
-# target_compile_definitions(sire_cam_backend PRIVATE sire_lib_EXPORTS)
-# target_compile_options(sire_cam_backend
-# 	PRIVATE 
-# 		$<$<CXX_COMPILER_ID:MSVC>:/bigobj>
-# 		$<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>
-# 		# $<$<NOT:$<CXX_COMPILER_ID:MSVC>>:-Wa,-mbig-obj>
-# 	)
-# target_sources(sire_cam_backend 
-# 	PRIVATE 
-# 		"src/cam_backend/cam_backend.cpp"
-# 		"src/cam_backend/command.cpp"
-# 	PUBLIC 
-# 		"include/sire/cam_backend/cam_backend.hpp"
-# 		"include/sire/cam_backend/command.hpp"
-# 	)
-# target_include_directories(sire_cam_backend
-# 	PUBLIC
-# 		$<INSTALL_INTERFACE:include> 
-# 		$<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-# 		${aris_INCLUDE_DIRS}
-# 		${hpp-fcl_INCLUDE_DIRS}
-# 	PRIVATE
-# 		${PROJECT_SOURCE_DIR}/src
-# 		${PROJECT_BINARY_DIR} # sire_lib_EXPORTS
-# 		${ASSIMP_INCLUDE_DIRS}
-# 	)
-# install(DIRECTORY include/sire/cam_backend DESTINATION include/sire)
 
 # Build library for sire
 add_library(sire_lib 
@@ -468,7 +356,7 @@ target_include_directories(sire_lib
 	PRIVATE
 		${PROJECT_SOURCE_DIR}/src
 	)
-set(PUB_RELY_LINK_LIB ${hpp-fcl_LIBRARIES} ${aris_LIBRARIES})
+set(PUB_RELY_LINK_LIB ${hpp-fcl_LIBRARIES} ${aris_LIBRARIES} msgpack-cxx)
 target_link_libraries(sire_lib PUBLIC ${PUB_RELY_LINK_LIB})
 
 set(sire_LIBRARIES 
