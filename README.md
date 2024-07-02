@@ -1,3 +1,13 @@
+# SIRE依赖的第三方库
+
+1. [Aris](https://github.com/py0330/aris): C++17标准，机器人建模，动力学运动学求解库，之后找机会换成C++20编译版本
+2. [Hpp-fcl](https://github.com/humanoid-path-planner/hpp-fcl): 碰撞检测库
+3. [Drake](https://github.com/RobotLocomotion/drake): 许多实现思路都来源于Drake，使用了大量代码，注释风格也在学习
+4. [uWebSocket](https://github.com/uNetworking/uWebSockets): Apache 2 License，用来做WebSocket的客户端，可以不用非得用ARIS写的。
+5. [std::uuid](https://github.com/mariusbancila/stduuid): 用于生成uuid
+6. [mongoose](https://github.com/cesanta/mongoose): 用于http网页服务端，GPLv3许可证，计划替换为uWebSocket
+7. [msgpack-c](https://github.com/msgpack/msgpack-c/tree/cpp_master): 用于通信信息打包
+
 # SIRE 使用介绍
 
 环境的编译与配置请参照Dockerfile的描述

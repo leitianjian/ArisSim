@@ -466,8 +466,8 @@ TEST_F(SimplePenetrationTest, PenetrationDynamicAndAnchored) {
   collision_engine_ = new collision::CollisionDetection();
   engine_->resetCollisionDetection(collision_engine_);
   engine_->setCollisionDetectionFlag(true);
-  engine_->addSphereGeometry(radius_, 0, default_pm, false);
-  engine_->addSphereGeometry(radius_, 1, default_pm, true);
+  engine_->addSphereGeometry(radius_, 0, sire::default_pm, false);
+  engine_->addSphereGeometry(radius_, 1, sire::default_pm, true);
   aris::core::Matrix filter_state{1, 0, 0, 1};
   engine_->collisionFilter().setStateMat(filter_state);
   engine_->init();
@@ -489,9 +489,9 @@ TEST_F(MultipleObjectsPenetrationTest, PenetrationTwoDynamicAndAnchored) {
   collision_engine_ = new collision::CollisionDetection();
   engine_->resetCollisionDetection(collision_engine_);
   engine_->setCollisionDetectionFlag(true);
-  engine_->addSphereGeometry(radius_, 0, default_pm, false);
-  engine_->addSphereGeometry(radius_, 1, default_pm, true);
-  engine_->addSphereGeometry(radius_, 2, default_pm, true);
+  engine_->addSphereGeometry(radius_, 0, sire::default_pm, false);
+  engine_->addSphereGeometry(radius_, 1, sire::default_pm, true);
+  engine_->addSphereGeometry(radius_, 2, sire::default_pm, true);
   aris::core::Matrix filter_state{1, 0, 0, 0, 1, 0, 0, 0, 1};
   engine_->collisionFilter().setStateMat(filter_state);
   engine_->init();

@@ -3,7 +3,6 @@ cmake_minimum_required(VERSION 3.13 FATAL_ERROR)
 project(sire VERSION 1.0.0)
 
 # set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
-
 if(UNIX)
 	set(CMAKE_INSTALL_PREFIX "/usr/sire/sire-1.0")
 endif(UNIX)
@@ -28,6 +27,8 @@ find_pkg_path(assimp assimp)
 
 find_pkg_path(hpp-fcl hpp_fcl)
 
+find_pkg_path(stduuid stduuid)
+
 find_pkg_path(msgpack-cxx msgpack_cxx)
 
 include(GenerateExportHeader)
@@ -51,8 +52,10 @@ target_sources(sire_core
 		"src/core/handler_base.cpp"
 		"src/core/event_manager.cpp"
 		#"src/core/init_trigger.cpp"
+		"src/core/nice_type_name.cpp"
 		"src/core/timer.cpp"
 		"src/core/geometry/shape_base.cpp"
+		"src/core/geometry/shape_calculator.cpp"
 		"src/core/geometry/box_shape.cpp"
 		"src/core/geometry/box_geometry.cpp"
 		"src/core/geometry/mesh_shape.cpp"
@@ -85,7 +88,9 @@ target_sources(sire_core
 		"include/sire/core/timer.hpp"
 		"include/sire/core/material_pair_prop.hpp"
 		"include/sire/core/material_manager.hpp"
+		"include/sire/core/nice_type_name.hpp"
 		"include/sire/core/geometry/shape_base.hpp"
+		"include/sire/core/geometry/shape_calculator.hpp"
 		"include/sire/core/geometry/sphere_shape.hpp"
 		"include/sire/core/geometry/sphere_geometry.hpp"
 		"include/sire/core/geometry/box_shape.hpp"
@@ -238,6 +243,7 @@ target_include_directories(sire_simulator
 	)
 install(DIRECTORY include/sire/simulator DESTINATION include/sire)
 
+# add_subdirectory(third_party/stduuid)
 add_library(sire_server OBJECT)
 target_compile_definitions(sire_server PRIVATE sire_lib_EXPORTS)
 target_compile_features(sire_server PUBLIC cxx_std_17)
@@ -245,6 +251,7 @@ target_sources(sire_server
 	PRIVATE 
 		"src/server/api.cpp"
 		"src/server/interface.cpp"
+		# "src/server/meshcat.cpp"
 #		"src/plan/get_force_sensor_data_cmd.cpp"
 		"src/plan/get_cmd.cpp"
 		"src/plan/sire_get.cpp"
@@ -253,14 +260,20 @@ target_sources(sire_server
 		"src/plan/fce_control_test_cmd.cpp"
 		"src/plan/execute_real_time_test_cmd.cpp"
 		"src/plan/mvj_cmd.cpp"
+		"src/server/rgba.cpp"
 		"src/server/mongoose.c"
 		"src/server/mongoose.h"
 		"src/server/md5.cpp"
 		"src/server/md5.h"
+		"src/server/base64.cpp"
+		"src/server/base64.hpp"
+		# "src/server/uuid.h"
 		"src/ext/tinyxml2.cpp"
 	PUBLIC 
 		"include/sire/server/api.hpp"
 		"include/sire/server/interface.hpp"
+		# "include/sire/server/meshcat_types.hpp"
+		# "include/sire/server/meshcat.hpp"
 #		"include/sire/plan/get_force_sensor_data_cmd.hpp"
 		"include/sire/plan/get_cmd.hpp"
 		"include/sire/plan/sire_get.hpp"
@@ -269,6 +282,7 @@ target_sources(sire_server
 		"include/sire/plan/fce_control_test_cmd.hpp"
 		"include/sire/plan/execute_real_time_test_cmd.hpp"
 		"include/sire/plan/mvj_cmd.hpp"
+		"include/sire/server/rgba.hpp"
 		"include/sire/ext/tinyxml2.h"
 		"include/sire/ext/json.hpp"
 	)
@@ -410,10 +424,11 @@ install(FILES ${PROJECT_BINARY_DIR}/sire-config.cmake
 	DESTINATION "share/sire/cmake")
 
 # ---------------------- build demos ---------------------------
-option(BUILD_DEMOS "build sire demos" OFF)
-if(BUILD_DEMOS)
+# option(BUILD_DEMO "build sire demo" OFF)
+message(STATUS "build demos ${BUILD_DEMO}")
+if(BUILD_DEMO)
 	add_subdirectory(demo)
-endif(BUILD_DEMOS)
+endif(BUILD_DEMO)
 
 # ---------------------- build tests ---------------------------
 option(BUILD_TEST "build sire tests" OFF)

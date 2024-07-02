@@ -2,30 +2,19 @@ import argparse
 import sys
 from os.path import abspath, dirname
 import os
-import platform
-import shutil
-from glob import glob
-from typing import Dict, Optional
 import pathlib
 
-from setuptools import distutils
-
-
-
-# By appending pytorch_root to sys.path, this module can import other torch
+# By appending build_root to sys.path, this module can import other torch
 # modules even when run as a standalone script. i.e., it's okay either you
 # do `python build_libtorch.py` or `python -m tools.build_libtorch`.
-pytorch_root = dirname(dirname(abspath(__file__)))
-sys.path.append(pytorch_root)
+build_root = dirname(dirname(abspath(__file__)))
+sys.path.append(build_root)
 
 # from build_scripts.cmake.cmake import CMake
-from build_scripts.build_sire import _create_build_env, build_sire
-from build_scripts.cmake import which  # type: ignore[import]
+# type: ignore[import]
+from build_scripts.cmake import _create_build_env, which, build_project
 
 if __name__ == "__main__":
-    os.environ["USE_MSVC"] = "True"
-    os.environ["USE_NINJA"] = "True"
-    os.environ["BUILD_TEST"] = "FALSE"
     # Placeholder for future interface. For now just gives a nice -h.
     parser = argparse.ArgumentParser(description="Build Sire", allow_abbrev=True)
     parser.add_argument(
@@ -61,6 +50,13 @@ if __name__ == "__main__":
         help="hpp-fcl install path",
     )
     parser.add_argument(
+        '-u',
+        "--uuid-path",
+        type=pathlib.Path,
+        required=True,
+        help="stduuid install path",
+    )
+    parser.add_argument(
         '-t',
         "--toolchain-path",
         type=pathlib.Path,
@@ -74,14 +70,13 @@ if __name__ == "__main__":
         action="store_true",
         help="Stop once cmake terminates. Leave users a chance to adjust build options",
     )
-    parser.add_argument("--build-demos", action="store_true", help="build demos")
+    parser.add_argument("--build-demo", action="store_true", help="build demonstration examples")
+    parser.add_argument("--build-test", action="store_true", help="build test cases")
     group = parser.add_mutually_exclusive_group()
     group.add_argument('--release', action='store_true')
     group.add_argument('--debug', action='store_true')
     group.add_argument('--build-all', action='store_true')
     options = parser.parse_args()
-    if options.build_demos:
-        os.environ["BUILD_DEMOS"] = "TRUE"
     
     my_env = _create_build_env()
 
@@ -101,39 +96,78 @@ if __name__ == "__main__":
         options.debug = True
         options.release = True
 
-    if options.debug:
-        os.environ['CMAKE_BUILD_TYPE'] = 'Debug'
-        build_sire(
-            sire_path=str(options.base_path),
+    cmake_args = {
+        "BUILD_DEMO": True if options.build_demo else False,
+        "BUILD_TEST": True if options.build_test else False,
+    }
+    if options.toolchain_path is not None:
+        cmake_args["CMAKE_TOOLCHAIN_FILE"] = str(options.toolchain_path)
+
+    for build_type in ["Debug", "Release"]:
+        not_debug, not_release = False, False
+        if not (build_type == "Debug" and options.debug):
+            not_debug = True
+        if not (build_type == "Release" and options.release):
+            not_release = True
+        if not_debug and not_release:
+            continue
+
+        cmake_args.update({
+            "TARGET_ARIS_PATH": str(options.aris_path / build_type), 
+            "TARGET_HPP_FCL_PATH": str(options.fcl_path / build_type), 
+            "TARGET_STDUUID_PATH": str(options.uuid_path /build_type),
+            "CMAKE_BUILD_TYPE": build_type,
+            })
+        my_env["CMAKE_BUILD_TYPE"] = build_type
+        build_project(
+            project_path=str(options.base_path),
             build_dir=None if options.build_dir is None else str(options.build_dir),
-            install_dir=None if options.install_dir is None else str(options.install_dir),
             version=None,
             # cmake_python_library=None,
             # build_python=False,
             rerun_config=options.rerun_config,
             rm_cache=options.rm_cache,
             cmake_only=options.cmake_only,
-            cmake_toolchain_file=None if options.toolchain_path is None else str(options.toolchain_path),
-            env=my_env,
-            TARGET_ARIS_PATH=str(options.aris_path),
-            TARGET_HPP_FCL_PATH=str(options.fcl_path),
-            CMAKE_BUILD_TYPE='Debug'
-        )
-    if options.release:
-        os.environ['CMAKE_BUILD_TYPE'] = 'Release'
-        build_sire(
-            sire_path=str(options.base_path),
-            build_dir=None if options.build_dir is None else str(options.build_dir),
+            build_only=False,
             install_dir=None if options.install_dir is None else str(options.install_dir),
-            version=None,
-            # cmake_python_library=None,
-            # build_python=False,
-            rerun_config=True if options.debug else options.rerun_config,
-            rm_cache=True if options.debug else options.rm_cache,
-            cmake_only=options.cmake_only,
-            cmake_toolchain_file=None if options.toolchain_path is None else str(options.toolchain_path),
             env=my_env,
-            TARGET_ARIS_PATH=str(options.aris_path),
-            TARGET_HPP_FCL_PATH=str(options.fcl_path),
-            CMAKE_BUILD_TYPE='Release'
+            **cmake_args
         )
+        
+
+    # if options.debug:
+    #     os.environ['CMAKE_BUILD_TYPE'] = 'Debug'
+    #     build_project(
+    #         project_path=str(options.base_path),
+    #         build_dir=None if options.build_dir is None else str(options.build_dir),
+    #         install_dir=None if options.install_dir is None else str(options.install_dir),
+    #         version=None,
+    #         # cmake_python_library=None,
+    #         # build_python=False,
+    #         rerun_config=options.rerun_config,
+    #         rm_cache=options.rm_cache,
+    #         cmake_only=options.cmake_only,
+    #         cmake_toolchain_file=None if options.toolchain_path is None else str(options.toolchain_path),
+    #         env=my_env,
+    #         TARGET_ARIS_PATH=str(options.aris_path),
+    #         TARGET_HPP_FCL_PATH=str(options.fcl_path),
+    #         CMAKE_BUILD_TYPE='Debug'
+    #     )
+    # if options.release:
+    #     os.environ['CMAKE_BUILD_TYPE'] = 'Release'
+    #     build_project(
+    #         project_path=str(options.base_path),
+    #         build_dir=None if options.build_dir is None else str(options.build_dir),
+    #         install_dir=None if options.install_dir is None else str(options.install_dir),
+    #         version=None,
+    #         # cmake_python_library=None,
+    #         # build_python=False,
+    #         rerun_config=True if options.debug else options.rerun_config,
+    #         rm_cache=True if options.debug else options.rm_cache,
+    #         cmake_only=options.cmake_only,
+    #         cmake_toolchain_file=None if options.toolchain_path is None else str(options.toolchain_path),
+    #         env=my_env,
+    #         TARGET_ARIS_PATH=str(options.aris_path),
+    #         TARGET_HPP_FCL_PATH=str(options.fcl_path),
+    #         CMAKE_BUILD_TYPE='Release'
+    #     )

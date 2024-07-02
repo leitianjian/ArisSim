@@ -9,6 +9,7 @@ class Display3dInit
  public:
   auto virtual prepareNrt() -> void override;
   auto virtual collectNrt() -> void override;
+  auto virtual test() -> void;
   explicit Display3dInit(const std::string& name = "Display3dInit_plan");
 };
 }  // namespace sire::server

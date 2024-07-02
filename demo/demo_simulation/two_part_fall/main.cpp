@@ -2,6 +2,8 @@
 #include <iostream>
 
 #include <aris.hpp>
+#include <thread>
+#include <chrono>
 
 #include "sire/middleware/sire_middleware.hpp"
 
@@ -16,11 +18,11 @@ int main(int argc, char* argv[]) {
       dynamic_cast<sire::middleware::SireMiddleware&>(cs.middleWare())
           .simulationLoop();
   cs.init();
-  simulator.start();
+
 
   // 开启控制器服务
   try {
-    cs.start();
+    // cs.start();
   } catch (const std::exception& err) {
     std::cout << "failed to start system, please reboot " << err.what() << std::endl;
   }
@@ -29,5 +31,8 @@ int main(int argc, char* argv[]) {
 
   // Receive Command
   cs.runCmdLine();
+  using namespace std::chrono_literals;
+  std::this_thread::sleep_for(2s);
+  simulator.start();
   return 0;
 }

@@ -4,8 +4,6 @@
 #include <string>
 #include <utility>
 
-#include <sire_lib_export.h>
-
 #include <aris/core/object.hpp>
 #include <aris/dynamic/model_basic.hpp>
 #include <aris/dynamic/model_coordinate.hpp>
@@ -17,8 +15,9 @@
 
 namespace sire::geometry {
 using namespace std;
-class SIRE_API MeshGeometry : public GeometryOnPart, public MeshShape {
+class MeshGeometry : public GeometryOnPart {
  public:
+  MeshShape meshShape;
   explicit MeshGeometry(string resource_path = "");
   virtual ~MeshGeometry();
   ARIS_DECLARE_BIG_FOUR(MeshGeometry)

@@ -9,6 +9,8 @@
 #include <aris/dynamic/model.hpp>
 #include <aris/server/control_server.hpp>
 
+#include "sire/core/constants.hpp"
+
 namespace sire::geometry {
 GeometryId geometry_id_flag = 0;
 struct GeometryBase::Imp {
@@ -26,17 +28,16 @@ auto GeometryBase::pm() const -> const aris::dynamic::double4x4& {
   return imp_->pm_;
 }
 auto GeometryBase::setPm(const double* pm_in) -> void {
-  pm_in = pm_in ? pm_in : default_pm;
+  pm_in = pm_in ? pm_in : sire::default_pm;
   aris::dynamic::s_vc(16, pm_in, *imp_->pm_);
 }
 GeometryBase::GeometryBase(const double* pm_in)
     : aris::dynamic::Geometry(), imp_(new Imp) {
-  pm_in = pm_in ? pm_in : default_pm;
+  pm_in = pm_in ? pm_in : sire::default_pm;
   aris::dynamic::s_vc(16, pm_in, *imp_->pm_);
 }
 SIRE_DEFINE_TO_JSON_HEAD(GeometryBase) {
-  j = nlohmann::json{
-      {"geometry_id", geometryId()}};
+  j = nlohmann::json{{"geometry_id", geometryId()}};
 }
 ARIS_DEFINE_BIG_FOUR_CPP(GeometryBase)
 GeometryBase::~GeometryBase() = default;

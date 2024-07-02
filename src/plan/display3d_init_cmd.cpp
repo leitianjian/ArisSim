@@ -59,10 +59,17 @@ auto Display3dInit::prepareNrt() -> void {
       std::make_pair<std::string, std::any>("geometry_pm", geometry_pm));
   out_param.push_back(
       std::make_pair<std::string, std::any>("part_pq_init", part_init_config));
+  test();
+  std::cout << "test()" << std::endl;
   ret() = out_param;
 }
 
 auto Display3dInit::collectNrt() -> void {}
+
+auto Display3dInit::test() -> void {
+  auto& cs = *controlServer();
+  std::cout << cs.running() << std::endl;
+}
 
 Display3dInit::Display3dInit(const std::string& name) {
   aris::core::fromXmlString(command(), "<Command name=\"display3d_init\"/>");

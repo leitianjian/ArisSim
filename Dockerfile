@@ -58,7 +58,7 @@ RUN cd ~/code \
       && cd sire \
       && mkdir build \
       && cd build \
-      && cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_DEMOS=True -DBUILD_TEST=False -DTARGET_ARIS_PATH=/usr/aris \
+      && cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_DEMO=True -DBUILD_TEST=False -DTARGET_ARIS_PATH=/usr/aris \
       && make -j8 install
 
 CMD bash

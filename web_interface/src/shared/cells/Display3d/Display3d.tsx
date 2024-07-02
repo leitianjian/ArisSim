@@ -36,7 +36,7 @@ import {
 import { shallowEqual, useDispatch, useSelector } from "react-redux";
 import { RootState } from "~/state/reducers";
 import { Display3dConfig } from "./types";
-import { withSize } from "react-sizeme";
+import sizeMe, { withSize } from "react-sizeme";
 import {
   BufferGeometry,
   Group,
@@ -45,8 +45,6 @@ import {
   Matrix4,
   Mesh,
   MeshStandardMaterial,
-  NormalBufferAttributes,
-  Object3DEventMap,
   Quaternion,
   Vector3,
 } from "three";
@@ -103,7 +101,7 @@ const FBXModel = ({
   position = default_position,
   quaternion = default_quaternion,
 }: ModelProps) => {
-  const fbx: Group<Object3DEventMap> = useMemo(useLoader(FBXLoader, path), [
+  const fbx: Group = useMemo(useLoader(FBXLoader, path), [
     path,
   ]);
   fbx.children.forEach((mesh) => {
@@ -124,7 +122,7 @@ const STLModel = ({
   position = default_position,
   quaternion = default_quaternion,
 }: ModelProps) => {
-  const stl: BufferGeometry<NormalBufferAttributes> = useMemo(
+  const stl: BufferGeometry = useMemo(
     useLoader(STLLoader, path),
     [path]
   );
@@ -394,8 +392,8 @@ const Display3d = (props: CellProps) => {
   );
 };
 
-Display3d.NAME = "仿真可视化";
 const sizedDisplay = withSize({ monitorHeight: true, refreshRate: 30 })(
   Display3d
-);
+) as React.ComponentType<Omit<CellProps, "size"> & sizeMe.WithSizeProps> & { NAME: string };
+sizedDisplay.NAME = "仿真可视化"
 export default sizedDisplay;

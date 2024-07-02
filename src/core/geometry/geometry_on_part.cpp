@@ -42,7 +42,7 @@ auto GeometryOnPart::setPartId(sire::PartId part_id) -> void {
 GeometryOnPart::GeometryOnPart(const double* pm_in, sire::PartId part_id,
                                bool is_dynamic)
     : GeometryBase(), imp_(new Imp) {
-  pm_in = pm_in ? pm_in : default_pm;
+  pm_in = pm_in ? pm_in : sire::default_pm;
   aris::dynamic::s_vc(16, pm_in, *imp_->prt_pm_);
   imp_->is_dynamic_ = is_dynamic;
   imp_->part_id_ = part_id;

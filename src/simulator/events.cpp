@@ -336,8 +336,8 @@ auto InitHandler1::handle(core::EventBase* e) -> bool {
   InitEvent1* event_ptr = dynamic_cast<InitEvent1*>(e);
   core::ContactPairManager* manager_ptr = simulator_ptr->contactPairManager();
   simulator_ptr->timer().reset();
-  initLog();
-  logCurrentState(0, 1, simulator_ptr);
+  // initLog();
+  // logCurrentState(0, 1, simulator_ptr);
   process_penetration_depth_and_maintain_impact_set(simulator_ptr);
   // 之后就可以正常积分
 
@@ -364,8 +364,8 @@ auto StepHandler1::handle(core::EventBase* e) -> bool {
   simulator_ptr->integratorPoolPtr()->at(0).step(dt);
   // std::cout << "dt=" << dt << " ";
   simulator_ptr->timer().updateSimTime(dt);
-  logCurrentState(simulator_ptr->timer().simTime(),
-                  simulator_ptr->timer().realtimeRate(), simulator_ptr);
+  // logCurrentState(simulator_ptr->timer().simTime(),
+  //                 simulator_ptr->timer().realtimeRate(), simulator_ptr);
   // if (dt == 0.0000001) std::cout << "dt=" << dt << " ";
   StepEvent* event_ptr = dynamic_cast<StepEvent*>(e);
   core::ContactPairManager* manager_ptr = simulator_ptr->contactPairManager();

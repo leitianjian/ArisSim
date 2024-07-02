@@ -19,8 +19,9 @@
 namespace sire::geometry {
 using namespace std;
 using json = nlohmann::json;
-class SIRE_API SphereGeometry : public GeometryOnPart, public SphereShape {
+class SphereGeometry : public GeometryOnPart {
  public:
+  SphereShape sphereShape;
   explicit SphereGeometry(double radius = 0.1, const double* prt_pm = nullptr);
   virtual ~SphereGeometry();
   ARIS_DECLARE_BIG_FOUR(SphereGeometry)

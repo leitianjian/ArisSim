@@ -27,9 +27,9 @@ using json = nlohmann::json;
 using namespace std;
 using namespace hpp;
 using GeometryId = sire::geometry::GeometryId;
-class SIRE_API SphereCollisionGeometry : public CollidableGeometry,
-                                         public sire::geometry::SphereShape {
+class SphereCollisionGeometry : public CollidableGeometry {
  public:
+  sire::geometry::SphereShape sphereShape;
   auto init() -> void override;
   explicit SphereCollisionGeometry(double radius = 0.1, int part_id = 0,
                                    const double* prt_pm = nullptr,

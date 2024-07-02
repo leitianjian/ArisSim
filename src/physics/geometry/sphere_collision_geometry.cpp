@@ -10,11 +10,15 @@
 
 #include <aris/core/reflection.hpp>
 
+#include "sire/core/geometry/shape_calculator.hpp"
+
 namespace sire::physics::geometry {
 SIRE_DEFINE_TO_JSON_HEAD(SphereCollisionGeometry) {
   GeometryOnPart::to_json(j);
-  j["shape_type"] = shapeType();
-  j["radius"] = radius();
+  sire::geometry::ShapeToName cal;
+  sphereShape.Reify(&cal);
+  j["shape_type"] = cal.string();
+  j["radius"] = sphereShape.radius();
 }
 
 auto SphereCollisionGeometry::init() -> void {
@@ -25,13 +29,13 @@ auto SphereCollisionGeometry::init() -> void {
           .finished(),
       (fcl::Vec3f() << partPm()[0][3], partPm()[1][3], partPm()[2][3])
           .finished());
-  resetCollisionObject(
-      new fcl::CollisionObject(make_shared<fcl::Sphere>(radius()), trans));
+  resetCollisionObject(new fcl::CollisionObject(
+      make_shared<fcl::Sphere>(sphereShape.radius()), trans));
 }
 SphereCollisionGeometry::SphereCollisionGeometry(double radius, int part_id,
                                                  const double* prt_pm,
                                                  bool is_dynamic)
-    : CollidableGeometry(prt_pm, part_id, is_dynamic), SphereShape(radius) {}
+    : CollidableGeometry(prt_pm, part_id, is_dynamic), sphereShape(radius) {}
 SphereCollisionGeometry::~SphereCollisionGeometry() = default;
 
 // 借助类内部的from_json to_json定义，
@@ -40,7 +44,6 @@ SIRE_DEFINE_JSON_OUTER_TWO(SphereCollisionGeometry)
 
 ARIS_REGISTRATION {
   aris::core::class_<SphereCollisionGeometry>("SphereCollisionGeometry")
-      .inherit<CollidableGeometry>()
-      .inherit<sire::geometry::SphereShape>();
+      .inherit<CollidableGeometry>();
 }
 }  // namespace sire::physics::geometry

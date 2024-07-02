@@ -10,17 +10,21 @@
 #include <aris/dynamic/model.hpp>
 #include <aris/server/control_server.hpp>
 
+#include "sire/core/geometry/shape_calculator.hpp"
+
 namespace sire::geometry {
 SIRE_DEFINE_TO_JSON_HEAD(BoxGeometry) {
   GeometryOnPart::to_json(j);
-  j["shape_type"] = shapeType();
-  j["length"] = length();
-  j["width"] = width();
-  j["height"] = height();
+  ShapeToName cal;
+  boxShape.Reify(&cal);
+  j["shape_type"] = cal.string();
+  j["length"] = boxShape.length();
+  j["width"] = boxShape.width();
+  j["height"] = boxShape.height();
 }
 
 BoxGeometry::BoxGeometry(double x, double y, double z, const double* prt_pm)
-    : GeometryOnPart(prt_pm), BoxShape(x, y, z) {}
+    : GeometryOnPart(prt_pm), boxShape(x, y, z) {}
 
 BoxGeometry::~BoxGeometry() = default;
 
@@ -29,8 +33,14 @@ ARIS_DEFINE_BIG_FOUR_CPP(BoxGeometry)
 SIRE_DEFINE_JSON_OUTER_TWO(BoxGeometry)
 
 ARIS_REGISTRATION {
+  auto setSide = [](BoxGeometry* box, aris::core::Matrix mat) -> void {
+    box->boxShape.setSide(mat.data());
+  };
+  auto getSide = [](BoxGeometry* box) -> aris::core::Matrix {
+    return aris::core::Matrix(1, 3, box->boxShape.side());
+  };
   aris::core::class_<BoxGeometry>("BoxGeometry")
       .inherit<GeometryOnPart>()
-      .inherit<BoxShape>();
+      .prop("side", &setSide, &getSide);
 }
 }  // namespace sire::geometry

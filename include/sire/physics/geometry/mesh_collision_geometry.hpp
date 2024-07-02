@@ -23,9 +23,9 @@ namespace geometry {
 using namespace std;
 using namespace hpp;
 using GeometryId = sire::geometry::GeometryId;
-class SIRE_API MeshCollisionGeometry : public CollidableGeometry,
-                                       public sire::geometry::MeshShape {
+class MeshCollisionGeometry : public CollidableGeometry {
  public:
+  sire::geometry::MeshShape meshShape;
   auto scale() const -> const double*;
   auto setScale(const double* scale) -> void;
   auto init() -> void override;

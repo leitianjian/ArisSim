@@ -10,13 +10,17 @@
 
 #include <aris/core/reflection.hpp>
 
+#include "sire/core/geometry/shape_calculator.hpp"
+
 namespace sire::physics::geometry {
 SIRE_DEFINE_TO_JSON_HEAD(BoxCollisionGeometry) {
   GeometryOnPart::to_json(j);
-  j["shape_type"] = shapeType();
-  j["length"] = length();
-  j["width"] = width();
-  j["height"] = height();
+  sire::geometry::ShapeToName cal;
+  boxShape.Reify(&cal);
+  j["shape_type"] = cal.string();
+  j["length"] = boxShape.length();
+  j["width"] = boxShape.width();
+  j["height"] = boxShape.height();
 }
 
 auto BoxCollisionGeometry::init() -> void {
@@ -27,13 +31,15 @@ auto BoxCollisionGeometry::init() -> void {
           .finished(),
       (fcl::Vec3f() << partPm()[0][3], partPm()[1][3], partPm()[2][3])
           .finished());
-  std::array<double, 3> temp = side();
+  // std::array<double, 3> temp = side();
   resetCollisionObject(new fcl::CollisionObject(
-      make_shared<fcl::Box>(temp[0], temp[1], temp[2]), trans));
+      make_shared<fcl::Box>(boxShape.side()[0], boxShape.side()[1],
+                            boxShape.side()[2]),
+      trans));
 }
 BoxCollisionGeometry::BoxCollisionGeometry(double x, double y, double z,
                                            const double* prt_pm)
-    : CollidableGeometry(prt_pm), BoxShape(x, y, z) {}
+    : CollidableGeometry(prt_pm), boxShape(x, y, z) {}
 BoxCollisionGeometry::~BoxCollisionGeometry() = default;
 SIRE_DEFINE_MOVE_CTOR_CPP(BoxCollisionGeometry)
 
@@ -41,7 +47,6 @@ SIRE_DEFINE_JSON_OUTER_TWO(BoxCollisionGeometry)
 
 ARIS_REGISTRATION {
   aris::core::class_<BoxCollisionGeometry>("BoxCollisionGeometry")
-      .inherit<CollidableGeometry>()
-      .inherit<sire::geometry::BoxShape>();
+      .inherit<CollidableGeometry>();
 }
 }  // namespace sire::physics::geometry

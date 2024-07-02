@@ -1,8 +1,6 @@
 #ifndef SIRE_COLLIDABLE_GEOMETRY_HPP_
 #define SIRE_COLLIDABLE_GEOMETRY_HPP_
 
-#include <sire_lib_export.h>
-
 #include <aris/core/object.hpp>
 #include <aris/dynamic/model_basic.hpp>
 #include <aris/dynamic/model_coordinate.hpp>
@@ -11,7 +9,7 @@
 #include "sire/physics/geometry/collidable.hpp"
 
 namespace sire::physics::geometry {
-class SIRE_API CollidableGeometry : public sire::geometry::GeometryOnPart,
+class CollidableGeometry : public sire::geometry::GeometryOnPart,
                                     public Collidable {
  public:
   auto virtual updateLocation(const double* prt_pm) -> void override;

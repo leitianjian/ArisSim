@@ -10,8 +10,7 @@ from distutils.version import LooseVersion
 from subprocess import CalledProcessError, check_call, check_output
 from typing import Any, cast, Dict, List, Optional
 
-from . import which
-from .cmake_utils import CMakeValue, get_cmake_cache_variables_from_file
+from .cmake_utils import which, CMakeValue, get_cmake_cache_variables_from_file
 from .env import BUILD_DIR, INSTALL_DIR, check_negative_env_flag, check_env_flag, IS_64BIT, IS_DARWIN, IS_WINDOWS, CMAKE_EXE_PATH
 from pathlib import PurePath
 # from .numpy_ import NUMPY_INCLUDE_DIR, USE_NUMPY
@@ -29,14 +28,14 @@ class CMake:
 
     def __init__(self, base_dir: str, build_dir: Optional[str], install_dir: Optional[str], env: os._Environ[str] = os.environ) -> None:
         self._cmake_command = CMake._get_cmake_command(env=env)
-        print(self._cmake_command)
+        self.build_type = self.BuildType(env.get("CMAKE_BUILD_TYPE", "Release"))
         self.base_dir = base_dir
         if not (os.path.isdir(base_dir) and os.path.isfile(os.path.join(base_dir, 'CMakeLists.txt'))):
             raise RuntimeError("no CMakeLists.txt found in path base_dir")
         if build_dir is None:
-            build_dir = BUILD_DIR
+            build_dir = os.path.join(BUILD_DIR, self.build_type.build_type_string)
         if install_dir is None:
-            install_dir = INSTALL_DIR
+            install_dir = os.path.join(INSTALL_DIR, self.build_type.build_type_string)
 
         if PurePath(build_dir).is_absolute():
             self.build_dir = build_dir
@@ -49,7 +48,6 @@ class CMake:
             self.install_dir = os.path.join(self.base_dir, install_dir)
         self.config_args = []
         self.build_args = []
-        self.build_type = self.BuildType()
 
     @property
     def _cmake_cache_file(self) -> str:
@@ -59,6 +57,7 @@ class CMake:
           string: The path to CMakeCache.txt.
         """
         return os.path.join(self.build_dir, "CMakeCache.txt")
+    
     @property
     def _cmake_cache_dir(self) -> str:
         r"""Returns the path to CMakeFiles directory
@@ -289,12 +288,9 @@ class CMake:
 
     def build(self, my_env: Dict[str, str]) -> None:
         "Runs cmake to build binaries."
-
         build_args = [
             "--build",
             self.build_dir,
-            "--target",
-            "install",
             "--config",
             self.build_type.build_type_string,
         ]
@@ -333,9 +329,45 @@ class CMake:
             else:
                 build_args += ["-j", max_jobs]
         self.run(args=build_args, env=my_env)
+    
+    def install(self, my_env: Dict[str, str]) -> None:
+        "Run cmake to install target"
+        install_args = [
+            "--install",
+            self.build_dir,
+            "--prefix",
+            self.install_dir,
+        ]
+        self.run(args=install_args, env=my_env)
 
 
+def build_project(
+    project_path: str,
+    build_dir: Optional[str],
+    version: Optional[str],
+    rerun_config: bool,
+    rm_cache: bool,
+    cmake_only: bool = False,
+    build_only: bool = True,
+    install_dir: Optional[str] = None,
+    env: os._Environ[str] = os.environ,
+    **kwargs: CMakeValue,
+) -> None:
+    cmake = CMake(base_dir=project_path, build_dir=build_dir, install_dir=install_dir, env=env)
+    cmake.defines(
+                #   SIRE_BUILD_VERSION=version,
+                #   BUILD_DEMO=check_env_flag("BUILD_DEMO", env=env),
+                #   BUILD_TEST=check_env_flag("BUILD_TEST", env=env),
+                #   CMAKE_TOOLCHAIN_FILE=cmake_toolchain_file,
+                  **kwargs,
+                  )
+    cmake.configure(
+        env, rerun_config, rm_cache
+    )
+    if cmake_only:
+        return
+    cmake.build(env)
 
-
-
-
+    if build_only:
+        return 
+    cmake.install(env)

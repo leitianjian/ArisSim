@@ -5,7 +5,25 @@ which calls get_cmake_cache_variables_from_file
 
 import re
 from typing import Dict, IO, Optional, Union
+import os
+import sys
+from typing import List, Dict, Optional
 
+def which(exe_file: str, append_paths: List[str] = [], env: Dict[str, str] = os.environ) -> Optional[str]:
+    path = env.get("PATH", os.defpath).split(os.pathsep)
+    for p in append_paths:
+        if os.path.isdir(p):
+            path += [p]
+    for d in path:
+        fname = os.path.join(d, exe_file)
+        fnames = [fname]
+        if sys.platform == "win32":
+            exts = env.get("PATHEXT", "").split(os.pathsep)
+            fnames += [fname + ext for ext in exts]
+        for name in fnames:
+            if os.access(name, os.F_OK | os.X_OK) and not os.path.isdir(name):
+                return name
+    return None
 
 CMakeValue = Optional[Union[bool, str]]
 

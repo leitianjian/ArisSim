@@ -3,8 +3,6 @@
 
 #include <atomic>
 
-#include <sire_lib_export.h>
-
 #include <aris/core/object.hpp>
 #include <aris/dynamic/model_basic.hpp>
 #include <aris/dynamic/model_coordinate.hpp>
@@ -21,7 +19,7 @@ namespace sire::geometry {
 // index part in the PartPool array. Static geometry should
 // mount upon ground part, which is the first part element in GeometryPool
 // array by convention.
-class SIRE_API GeometryOnPart : public GeometryBase {
+class GeometryOnPart : public GeometryBase {
  public:
   auto partPm() const -> const aris::dynamic::double4x4&;
   auto isDynamic() const -> bool;

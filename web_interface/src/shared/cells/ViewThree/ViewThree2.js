@@ -259,11 +259,13 @@ class ViewThree2 extends Component {
         );
       }
       if (i == 0) {
-        self.geometries[i].material = new THREE.MeshStandardMaterial({
-          color: "rgb(117, 83, 56)",
-          roughness: 1.0,
-          metalness: 0.1,
-        });
+        if (self.geometries[i] && 'material' in self.geometries[i]) {
+          self.geometries[i].material = new THREE.MeshStandardMaterial({
+            color: "rgb(117, 83, 56)",
+            roughness: 1.0,
+            metalness: 0.1,
+          });
+        }
       }
     });
     this.props.sendCmdSilence("get --part_pq", (msg) => {

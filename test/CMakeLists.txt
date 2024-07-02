@@ -233,12 +233,12 @@ target_link_libraries(geometry_serialization_test
 # )
 
 add_custom_command(TARGET collision_detection_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:collision_detection_test> $<TARGET_FILE_DIR:collision_detection_test>
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:collision_detection_test> $<TARGET_FILE_DIR:collision_detection_test>
   COMMAND_EXPAND_LISTS
 )
 if(WIN32)
 add_custom_command(TARGET collision_detection_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy "${TARGET_HPP_FCL_PATH}/bin/hpp-fcl.dll" $<TARGET_FILE_DIR:collision_detection_test>
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TARGET_HPP_FCL_PATH}/bin/hpp-fcl.dll" $<TARGET_FILE_DIR:collision_detection_test>
 )
 endif(WIN32)
 add_custom_command(TARGET collision_detection_test POST_BUILD
@@ -246,7 +246,7 @@ add_custom_command(TARGET collision_detection_test POST_BUILD
   "target runtime dll = $<TARGET_RUNTIME_DLLS:collision_detection_test>")
 
 add_custom_command(TARGET sorted_pair_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_RUNTIME_DLLS:sorted_pair_test> $<TARGET_FILE_DIR:sorted_pair_test> 
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:sorted_pair_test> $<TARGET_FILE_DIR:sorted_pair_test> 
   COMMAND_EXPAND_LISTS
 )
 add_custom_command(TARGET sorted_pair_test POST_BUILD

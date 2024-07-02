@@ -5,8 +5,6 @@
 #include <string>
 #include <utility>
 
-#include <sire_lib_export.h>
-
 #include <aris/core/object.hpp>
 #include <aris/dynamic/model_basic.hpp>
 #include <aris/dynamic/model_coordinate.hpp>
@@ -19,8 +17,9 @@
 namespace sire::geometry {
 using namespace std;
 using json = nlohmann::json;
-class SIRE_API BoxGeometry : public GeometryOnPart, public BoxShape {
+class BoxGeometry : public GeometryOnPart {
  public:
+  BoxShape boxShape;
   explicit BoxGeometry(double x = 0.1, double y = 0.1, double z = 0.1,
                        const double* prt_pm = nullptr);
   virtual ~BoxGeometry();

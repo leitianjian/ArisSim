@@ -30,7 +30,9 @@ macro(INSTALL_DLL)
           "${VCPKG_DLL_PREFIX}/zlib$<$<CONFIG:Debug>:d>1.dll"
           "${VCPKG_DLL_PREFIX}/pugixml.dll"
           "${VCPKG_DLL_PREFIX}/boost_serialization-vc${MSVC_TOOLSET_VERSION}-mt$<$<CONFIG:Debug>:-gd>-x64-${Boost_VERSION_MAJOR}_${Boost_VERSION_MINOR}.dll"
+          # "${VCPKG_DLL_PREFIX}/boost_serialization-vc${MSVC_TOOLSET_VERSION}-mt-x64-${Boost_VERSION_MAJOR}_${Boost_VERSION_MINOR}.dll"
           "${VCPKG_DLL_PREFIX}/boost_filesystem-vc${MSVC_TOOLSET_VERSION}-mt$<$<CONFIG:Debug>:-gd>-x64-${Boost_VERSION_MAJOR}_${Boost_VERSION_MINOR}.dll"
+          # "${VCPKG_DLL_PREFIX}/boost_filesystem-vc${MSVC_TOOLSET_VERSION}-mt-x64-${Boost_VERSION_MAJOR}_${Boost_VERSION_MINOR}.dll"
         DESTINATION
           ${_INSTALLDLL_DESTINATION}
         OPTIONAL

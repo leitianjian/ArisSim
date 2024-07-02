@@ -13,12 +13,15 @@
 #include <aris/core/reflection.hpp>
 #include <aris/dynamic/model.hpp>
 #include <aris/server/control_server.hpp>
+#include "sire/core/geometry/shape_calculator.hpp"
 
 namespace sire::physics::geometry {
 SIRE_DEFINE_TO_JSON_HEAD(MeshCollisionGeometry) {
   GeometryOnPart::to_json(j);
-  j["shape_type"] = shapeType();
-  j["resourcePath"] = resourcePath();
+  sire::geometry::ShapeToName cal;
+  meshShape.Reify(&cal);
+  j["shape_type"] = cal.string();
+  j["resourcePath"] = meshShape.resourcePath();
   j["scale_x"] = *scale();
   j["scale_y"] = *(scale() + 1);
   j["scale_z"] = *(scale() + 2);
@@ -28,7 +31,7 @@ struct MeshCollisionGeometry::Imp {
 };
 MeshCollisionGeometry::MeshCollisionGeometry(const string& resource_path,
                                              const double* prt_pm)
-    : CollidableGeometry(prt_pm), MeshShape(resource_path), imp_(new Imp) {}
+    : CollidableGeometry(prt_pm), meshShape(resource_path), imp_(new Imp) {}
 MeshCollisionGeometry::~MeshCollisionGeometry() = default;
 SIRE_DEFINE_MOVE_CTOR_CPP(MeshCollisionGeometry);
 
@@ -41,7 +44,7 @@ auto MeshCollisionGeometry::setScale(const double* scale) -> void {
 auto MeshCollisionGeometry::init() -> void {
   shared_ptr<fcl::BVHModel<fcl::OBBRSS>> bvh_model =
       make_shared<fcl::BVHModel<fcl::OBBRSS>>();
-  fcl::loadPolyhedronFromResource(getResourcePath(), fcl::Vec3f(imp_->scale_),
+  fcl::loadPolyhedronFromResource(meshShape.getResourcePath(), fcl::Vec3f(imp_->scale_),
                                   bvh_model);
   fcl::Transform3f trans(
       (fcl::Matrix3f() << partPm()[0][0], partPm()[0][1], partPm()[0][2],
@@ -62,7 +65,6 @@ ARIS_REGISTRATION {
   };
   aris::core::class_<MeshCollisionGeometry>("MeshCollisionGeometry")
       .inherit<CollidableGeometry>()
-      .inherit<sire::geometry::MeshShape>()
       .prop("scale", &setMeshGeometryScale, &getMeshGeometryScale);
 }
 }  // namespace sire::physics::geometry

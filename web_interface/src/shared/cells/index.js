@@ -11,7 +11,7 @@ import ToolCalib from "./ToolCalib";
 import SetDH from "./SetDH";
 import ModelConfiguration from "./ModelConfigeration";
 import EthercatConfiguration from "./EthercatConfiguration";
-import Blockly from "./BlocklyEditor/Blockly";
+// import Blockly from "./BlocklyEditor/Blockly";
 import ConnectedLogDisplay from "./LogDisplay/LogDisplay";
 import ExperCell from "./CustimizedCommand/ExperCell";
 import ConnectedSixDimensionForce from "./SixDimensionForce/SixDimensionForce";
@@ -23,31 +23,33 @@ import ConnectedProgramLib from "./ProgramLib/ProgramLib";
 import ConnectedManualDrag from "./ManualDrag/ManualDrag";
 import RecordingMode from "./RecordingMode/RecordingMode";
 import sizedDisplay from "./Display3d/Display3d";
+// import meshcatDisplay from "./MeshcatDisplay/meshcatDisplay";
 
 export default {
-  Blockly,
+  // Blockly,
   JogJoint,
   ManualSwitch,
   RobotStatus,
-  EthercatConfiguration,
-  ModelConfiguration,
-  SetDH,
-  ToolCalib,
-  RealtimeChart,
-  Debugger,
-  Logger,
-  Unknown,
+  // EthercatConfiguration,
+  // ModelConfiguration,
+  // SetDH,
+  // ToolCalib,
+  // RealtimeChart,
+  // Debugger,
+  // Logger,
+  // Unknown,
   //ViewThree,
   ViewThree2,
   sizedDisplay,
-  ConnectedLogDisplay,
-  ExperCell,
-  ConnectedSixDimensionForce,
-  DIDisplay,
-  DODisplay,
-  ConnectedCodeEditor,
-  // DEPolishTech,
-  ConnectedProgramLib,
-  ConnectedManualDrag,
-  RecordingMode,
+  // meshcatDisplay,
+  // ConnectedLogDisplay,
+  // ExperCell,
+  // ConnectedSixDimensionForce,
+  // DIDisplay,
+  // DODisplay,
+  // ConnectedCodeEditor,
+  // // DEPolishTech,
+  // ConnectedProgramLib,
+  // ConnectedManualDrag,
+  // RecordingMode,
 };
