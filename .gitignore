@@ -43,7 +43,7 @@ install_manifest.txt
 *.app
 /.vs
 /out
-/install
+*/install/
 /install_loc
 /CMakeSettings.json
 

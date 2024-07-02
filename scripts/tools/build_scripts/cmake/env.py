@@ -22,7 +22,7 @@ CMAKE_EXE_PATH = ""
 IS_64BIT = struct.calcsize("P") == 8
 
 BUILD_DIR = "build"
-INSTALL_DIR = "install_loc"
+INSTALL_DIR = "install"
 
 def check_env_flag(name: str, default: str = "", env: Dict[str, str] = os.environ) -> bool:
     return env.get(name, default).upper() in ["ON", "1", "YES", "TRUE", "Y"]
