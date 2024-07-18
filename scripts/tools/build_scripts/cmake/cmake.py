@@ -33,9 +33,9 @@ class CMake:
         if not (os.path.isdir(base_dir) and os.path.isfile(os.path.join(base_dir, 'CMakeLists.txt'))):
             raise RuntimeError("no CMakeLists.txt found in path base_dir")
         if build_dir is None:
-            build_dir = os.path.join(BUILD_DIR, self.build_type.build_type_string)
+            build_dir = BUILD_DIR
         if install_dir is None:
-            install_dir = os.path.join(INSTALL_DIR, self.build_type.build_type_string)
+            install_dir = INSTALL_DIR
 
         if PurePath(build_dir).is_absolute():
             self.build_dir = build_dir
@@ -46,6 +46,9 @@ class CMake:
             self.install_dir = install_dir
         else:
             self.install_dir = os.path.join(self.base_dir, install_dir)
+        
+        self.build_dir = os.path.join(self.build_dir, self.build_type.build_type_string)
+        self.install_dir = os.path.join(self.install_dir, self.build_type.build_type_string)
         self.config_args = []
         self.build_args = []
 

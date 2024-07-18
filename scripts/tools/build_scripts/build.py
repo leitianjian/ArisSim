@@ -115,7 +115,7 @@ if __name__ == "__main__":
         cmake_args.update({
             "TARGET_ARIS_PATH": str(options.aris_path / build_type), 
             "TARGET_HPP_FCL_PATH": str(options.fcl_path / build_type), 
-            "TARGET_STDUUID_PATH": str(options.uuid_path /build_type),
+            "TARGET_STDUUID_PATH": str(options.uuid_path / build_type),
             "CMAKE_BUILD_TYPE": build_type,
             })
         my_env["CMAKE_BUILD_TYPE"] = build_type
