@@ -232,26 +232,46 @@ target_link_libraries(geometry_serialization_test
 # 		${PUB_RELY_LINK_LIB}
 # )
 
+
+if(WIN32)
+string(TOLOWER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_LOWER)
+
+if(DEFINED VCPKG_INSTALLED_DIR)
+  if(CMAKE_BUILD_TYPE_LOWER STREQUAL "debug")
+    set(VCPKG_DLL_PREFIX ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/debug/bin)
+  elseif(CMAKE_BUILD_TYPE_LOWER STREQUAL "release")
+    set(VCPKG_DLL_PREFIX ${VCPKG_INSTALLED_DIR}/${VCPKG_TARGET_TRIPLET}/bin)
+  endif()
+endif(DEFINED VCPKG_INSTALLED_DIR)
+
 add_custom_command(TARGET collision_detection_test POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:collision_detection_test> $<TARGET_FILE_DIR:collision_detection_test>
   COMMAND_EXPAND_LISTS
 )
-if(WIN32)
+
 add_custom_command(TARGET collision_detection_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E copy_if_different "${TARGET_HPP_FCL_PATH}/bin/hpp-fcl.dll" $<TARGET_FILE_DIR:collision_detection_test>
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different 
+	"${TARGET_HPP_FCL_PATH}/bin/hpp-fcl.dll" 
+	"${VCPKG_DLL_PREFIX}/assimp-vc${MSVC_TOOLSET_VERSION}-mt$<$<CONFIG:Debug>:d>.dll"
+	"${VCPKG_DLL_PREFIX}/zlib$<$<CONFIG:Debug>:d>1.dll"
+	"${VCPKG_DLL_PREFIX}/pugixml.dll"
+	"${VCPKG_DLL_PREFIX}/boost_serialization-vc${MSVC_TOOLSET_VERSION}-mt$<$<CONFIG:Debug>:-gd>-x64-${Boost_VERSION_MAJOR}_${Boost_VERSION_MINOR}.dll"
+	"${VCPKG_DLL_PREFIX}/boost_filesystem-vc${MSVC_TOOLSET_VERSION}-mt$<$<CONFIG:Debug>:-gd>-x64-${Boost_VERSION_MAJOR}_${Boost_VERSION_MINOR}.dll"
+	$<TARGET_FILE_DIR:collision_detection_test>
 )
-endif(WIN32)
-add_custom_command(TARGET collision_detection_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E echo 
-  "target runtime dll = $<TARGET_RUNTIME_DLLS:collision_detection_test>")
+# add_custom_command(TARGET collision_detection_test POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E echo 
+#   "target runtime dll = $<TARGET_RUNTIME_DLLS:collision_detection_test>")
 
 add_custom_command(TARGET sorted_pair_test POST_BUILD
   COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_RUNTIME_DLLS:sorted_pair_test> $<TARGET_FILE_DIR:sorted_pair_test> 
   COMMAND_EXPAND_LISTS
 )
-add_custom_command(TARGET sorted_pair_test POST_BUILD
-  COMMAND ${CMAKE_COMMAND} -E echo 
-  "target runtime dll = $<TARGET_RUNTIME_DLLS:sorted_pair_test>")
+# add_custom_command(TARGET sorted_pair_test POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E echo 
+#   "target runtime dll = $<TARGET_RUNTIME_DLLS:sorted_pair_test>")
+
+endif(WIN32)
 
 include(GoogleTest)
 # set not to run test post build
