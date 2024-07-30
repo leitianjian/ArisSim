@@ -66,6 +66,31 @@ def build_aris(
             **kwargs
         )
 
+def replace_string_in_win(file_path):
+    """
+    Replace all occurrences of a string in a file with a new string.
+
+    :param file_path: Path to the file
+    :param original_string: The string to be replaced
+    :param new_string: The string to replace with
+    """
+    original_string = 'set(CMAKE_INSTALL_PREFIX "C:/aris/aris-${CMAKE_PROJECT_VERSION}")'
+    new_string = 'get_filename_component(PARENT_DIR ${CMAKE_CURRENT_SOURCE_DIR} DIRECTORY)' + '\n' + '  set(CMAKE_INSTALL_PREFIX "${PARENT_DIR}/install/aris/Release")'
+
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            file_contents = file.read()
+        
+        new_contents = file_contents.replace(original_string, new_string)
+        
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(new_contents)
+        
+        print(f"Successfully replaced '{original_string}' with '{new_string}' in {file_path}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+
 if __name__ == "__main__":
     # Placeholder for future interface. For now just gives a nice -h.
     parser = argparse.ArgumentParser(description="Build aris", allow_abbrev=True)
@@ -102,6 +127,7 @@ if __name__ == "__main__":
     group.add_argument('--debug', action='store_true')
     group.add_argument('--build-all', action='store_true')
     options = parser.parse_args()
+    replace_string_in_win(str(options.base_path) + '\CMakeLists.txt')
 
     if options.rm_cache_reconfig:
         options.rerun_config = True
