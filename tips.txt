@@ -1,2 +1,0 @@
-好像每次aris自动生成以后会默认安装到C盘，但实际上该项目会生成到项目目录下的third_parties里(已修复，在aris的cmakelists里使用父目录)
-aris实际上有bug，在test/test_core/test_core_socket.cpp里的第274行第一个参数应该为aris::core::SOCKET_T
