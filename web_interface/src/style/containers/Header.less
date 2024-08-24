@@ -79,8 +79,12 @@
     font-size: @font-size-base;
   }
   .@{header-prefix-cls}-type-selector{
+    &-radio-group{
+      width: 100%;
+      height: 100%;
+    }
     .@{ant-prefix}-radio-button-wrapper{
-      width: calc(~"12% - " @padding-md);
+      width: calc(~"15% - " @padding-md);
       text-align: center;
       margin: @padding-xs;
       height: auto;
