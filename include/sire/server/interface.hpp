@@ -14,7 +14,7 @@
 #include <aris/server/interface.hpp>
 
 namespace sire::server {
-class SIRE_API ProgramWebInterface : public aris::server::Interface {
+class ProgramWebInterface : public aris::server::Interface {
  public:
   auto virtual open() -> void override;
   auto virtual close() -> void override;
@@ -41,9 +41,9 @@ class SIRE_API ProgramWebInterface : public aris::server::Interface {
   struct Imp;
   aris::core::ImpPtr<Imp> imp_;
 };
-auto SIRE_API parse_ret_value(
+auto parse_ret_value(
     std::vector<std::pair<std::string, std::any>>& ret, bool print_flag) -> std::string;
-class SIRE_API HttpInterface : public aris::server::Interface {
+class HttpInterface : public aris::server::Interface {
  public:
   auto virtual open() -> void override;
   auto virtual close() -> void override;
@@ -63,6 +63,7 @@ class SIRE_API HttpInterface : public aris::server::Interface {
   struct Imp;
   aris::core::ImpPtr<Imp> imp_;
 };
+
 }  // namespace sire::server
 
 #endif
