@@ -61,7 +61,7 @@ class ShapeBase {
   // This is *not* in the public section. However, this allows the children to
   // also use this macro, but precludes the possibility of external users
   // slicing Shapes.
-  ARIS_DEFINE_BIG_FOUR_CPP(ShapeBase)
+  ARIS_DEFINE_BIG_FOUR(ShapeBase)
 
   /** Constructor available for derived class construction. A derived class
    should invoke this in its initialization list, passing a ShapeTag

@@ -12,7 +12,7 @@ namespace server {
 /** Defines RGBA (red, green, blue, alpha) values on the range [0, 1]. */
 class Rgba {
  public:
-  ARIS_DEFINE_BIG_FOUR_CPP(Rgba)
+  ARIS_DEFINE_BIG_FOUR(Rgba)
 
   /** Default constructor produces fully opaque white. */
   Rgba() = default;

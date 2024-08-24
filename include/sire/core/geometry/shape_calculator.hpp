@@ -29,7 +29,7 @@ class ShapeCalculator {
   virtual void ImplementGeometry(const SphereShape& sphere, void* user_data);
 
  protected:
-  ARIS_DEFINE_BIG_FOUR_CPP(ShapeCalculator)
+  ARIS_DEFINE_BIG_FOUR(ShapeCalculator)
   ShapeCalculator() = default;
 
   /** Derived ShapeCalculators can replace the default message for unsupported

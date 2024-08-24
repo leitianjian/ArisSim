@@ -8,9 +8,9 @@ RUN apt-get -y install locales \
       && sed -i 's/# \(en_US\.UTF-8 .*\)/\1/' /etc/locale.gen \
       && locale-gen
 ENV LANG en_US.UTF-8 \ 
-    LANGUAGE en_US:en \
-    LC_ALL en_US.UTF-8 \
-    TZ=Asia/Shanghai
+      LANGUAGE en_US:en \
+      LC_ALL en_US.UTF-8 \
+      TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
       && apt-get install -y \
       software-properties-common \
@@ -31,17 +31,17 @@ RUN apt-get install -y \
       libassimp-dev \
       liboctomap-dev \
       libqhull-dev
-      
+
 # clone hpp-fcl
 RUN cd ~ && mkdir code && cd code \
-    && git clone https://github.com/humanoid-path-planner/hpp-fcl.git \
-    && cd hpp-fcl \
-    && git submodule update --init --recursive \
-    && mkdir build \ 
-    && cd build \ 
-    && cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_INTERFACE=False -DBUILD_TESTING=False \
-    && make -j8 install \
-    && ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
+      && git clone https://github.com/humanoid-path-planner/hpp-fcl.git \
+      && cd hpp-fcl \
+      && git submodule update --init --recursive \
+      && mkdir build \ 
+      && cd build \ 
+      && cmake .. -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON_INTERFACE=False -DBUILD_TESTING=False \
+      && make -j8 install \
+      && ln -s /usr/include/eigen3/Eigen /usr/include/Eigen
 
 # clone aris from py branch
 RUN cd ~/code \
@@ -50,6 +50,25 @@ RUN cd ~/code \
       && mkdir build \
       && cd build \
       && cmake .. -DCMAKE_BUILD_TYPE=Release \
+      && make -j8 install
+
+# clone stduuid from py branch
+RUN cd ~/code \
+      && git clone https://github.com/mariusbancila/stduuid.git \
+      && cd stduuid \
+      && mkdir build \
+      && cd build \
+      && cmake ..\
+      && make -j8 install
+
+# clone msgpack-c from py branch
+RUN cd ~/code \
+      && git clone https://github.com/msgpack/msgpack-c.git \
+      && git checkout cpp_master \
+      && cd msgpack-c \
+      && mkdir build \
+      && cd build \
+      && cmake ..\
       && make -j8 install
 
 # clone sire and build install
