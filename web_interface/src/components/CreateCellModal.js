@@ -27,12 +27,12 @@ class CreateCellModal extends PureComponent {
 
   render() {
     const { prefixCls } = this.props;
-    console.log("test creatingCell", Cells);
+    // console.log("test creatingCell", Cells);
     return (
       <IntlProvider>
         <Modal
           title={<FormattedMessage id="添加面板" />}
-          visible={this.props.prpShowCreateCellModal}
+          open={this.props.prpShowCreateCellModal}
           width={"75%"}
           okText={<FormattedMessage id="创建" />}
           cancelText={<FormattedMessage id="取消" />}
@@ -54,6 +54,7 @@ class CreateCellModal extends PureComponent {
               ]}
             >
               <RadioGroup
+                className={`${prefixCls}-type-selector-radio-group`}
                 disabled={!!this.props.prpCreatingCell}
                 onChange={(e) => {
                   const s = e.target.value;
