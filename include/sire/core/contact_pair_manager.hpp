@@ -97,6 +97,7 @@ class SIRE_API ContactPairManager {
   // auto setType(const core::SortedPair<sire::PartId>& pair, ContactPairType
   // type)
   //     -> void;
+  auto clear() -> void;
   auto init() -> void;
   ContactPairManager();
   ~ContactPairManager();

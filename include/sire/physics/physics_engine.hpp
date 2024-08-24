@@ -131,6 +131,9 @@ class SIRE_API PhysicsEngine {
   auto resetPartContactForce() -> void;
   auto setForcePoolSimulation() -> void;
 
+  auto saveInitialModel(aris::dynamic::Model& model) -> void;
+  auto resetInitialModel() -> void;
+
   PhysicsEngine();
   virtual ~PhysicsEngine();
   PhysicsEngine(const PhysicsEngine&) = delete;

@@ -80,6 +80,11 @@ auto ContactPairManager::setValue(const core::SortedPair<sire::PartId>& pair,
     search->second = value;
   }
 }
+auto ContactPairManager::clear() -> void {
+  imp_->contact_pair_map_.clear();
+  imp_->impacted_contact_set_.clear();
+  imp_->impacted_prt_set_.clear();
+}
 // auto ContactPairManager::setState(const core::SortedPair<double>& pair,
 //                                   ContactPairState state) -> void {
 //   if (auto search = imp_->map_.find(pair); search != imp_->map_.end()) {

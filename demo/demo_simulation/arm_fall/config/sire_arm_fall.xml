@@ -52,7 +52,7 @@
 					<MeshGeometry id="0" part_id="0" is_dynamic="false" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="/robot/geometry/Rokae/XB4/l0.data" scale="{1,1,1}"/>
 				</GeometryPoolElement>
 			</Part>
-			<Part name="L1" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{1,0,0,0,0,0,0,0,0,0}">
+			<Part name="L1" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{4,0.08,0,1.2,1.1,1.1048,0.0248,0,-0.072,0}">
 				<MarkerPoolElement __prop_name__="marker_pool">
 					<Marker name="joint_0_i" active="true" pe="{0,0,0.342,0.785398163397448,0,0.785398163397448}"/>
 					<Marker name="joint_1_j" active="true" pe="{0.04,0,0.342,3.14159265358979,1.5707963267949,4.71238898038469}"/>
@@ -61,7 +61,7 @@
 					<MeshGeometry id="1" part_id="1" is_dynamic="true" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="/robot/geometry/Rokae/XB4/l1.data" scale="{1,1,1}"/>
 				</GeometryPoolElement>
 			</Part>
-			<Part name="L2" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{1,0,0,0,0,0,0,0,0,0}">
+			<Part name="L2" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{4,0.16,0,1.92,2.8048,.824,0.0292,0,-0.2304,0}">
 				<MarkerPoolElement __prop_name__="marker_pool">
 					<Marker name="joint_1_i" active="true" pe="{0.04,0,0.342,3.14159265358979,1.5707963267949,4.71238898038469}"/>
 					<Marker name="joint_2_j" active="true" pe="{0.04,0,0.617,3.14159265358979,1.5707963267949,4.71238898038469}"/>
@@ -70,7 +70,7 @@
 					<MeshGeometry id="2" part_id="2" is_dynamic="true" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="/robot/geometry/Rokae/XB4/l2.data" scale="{1,1,1}"/>
 				</GeometryPoolElement>
 			</Part>
-			<Part name="L3" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{1,0,0,0,0,0,0,0,0,0}">
+			<Part name="L3" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{2,0.12,0,1.24,2.3094,2.331,0.0246,0,-0.2232,0}">
 				<MarkerPoolElement __prop_name__="marker_pool">
 					<Marker name="joint_2_i" active="true" pe="{0.04,0,0.617,3.14159265358979,1.5707963267949,4.71238898038469}"/>
 					<Marker name="joint_3_j" active="true" pe="{0.32,0,0.642,1.5707963267949,1.5707963267949,1.5707963267949}"/>
@@ -79,7 +79,7 @@
 					<MeshGeometry id="3" part_id="3" is_dynamic="true" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="/robot/geometry/Rokae/XB4/l3.data" scale="{1,1,1}"/>
 				</GeometryPoolElement>
 			</Part>
-			<Part name="L4" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{1,0,0,0,0,0,0,0,0,0}">
+			<Part name="L4" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{4,0.8,0,2.56,4.9222,5.4252,0.51,0,-1.536,0}">
 				<MarkerPoolElement __prop_name__="marker_pool">
 					<Marker name="joint_3_i" active="true" pe="{0.32,0,0.642,1.5707963267949,1.5707963267949,1.5707963267949}"/>
 					<Marker name="joint_4_j" active="true" pe="{0.32,0,0.642,3.14159265358979,1.5707963267949,4.71238898038469}"/>
@@ -88,7 +88,7 @@
 					<MeshGeometry id="4" part_id="4" is_dynamic="true" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="/robot/geometry/Rokae/XB4/l4.data" scale="{1,1,1}"/>
 				</GeometryPoolElement>
 			</Part>
-			<Part name="L5" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{1,0,0,0,0,0,0,0,0,0}">
+			<Part name="L5" active="true" pe="{0,0,0,-0,0,-0}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{0.5,0.32,0,0.642,2.473384,3.087784,0.614800,0,-1.23264,0}">
 				<MarkerPoolElement __prop_name__="marker_pool">
 					<Marker name="joint_4_i" active="true" pe="{0.32,0,0.642,3.14159265358979,1.5707963267949,4.71238898038469}"/>
 					<Marker name="joint_5_j" active="true" pe="{0.32,0,0.642,1.5707963267949,1.5707963267949,1.5707963267949}"/>
@@ -97,7 +97,7 @@
 					<MeshGeometry id="5" part_id="5" is_dynamic="true" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="/robot/geometry/Rokae/XB4/l5.data" scale="{1,1,1}"/>
 				</GeometryPoolElement>
 			</Part>
-			<Part name="EE" active="true" pe="{0.393,0,0.642,1.5707963267949,1.5707963267949,4.71238898038469}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{1,0,0,0,0,0,0,0,0,0}">
+			<Part name="EE" active="true" pe="{0.393,0,0.642,1.5707963267949,1.5707963267949,4.71238898038469}" vel="{0,0,0,0,0,0}" acc="{0,0,0,0,0,0}" inertia="{0.01,0,0,0,0,0,0,0,0,0}">
 				<MarkerPoolElement __prop_name__="marker_pool">
 					<Marker name="joint_5_i" active="true" pe="{-4.46996081688784e-18,0,-0.073,1.5707963267949,6.12323399573677e-17,1.5707963267949}"/>
 					<Marker name="tool0" active="true" pe="{0,0,0,-0,0,-0}"/>
@@ -290,6 +290,12 @@
 			<Display3dInit name="Display3dInit_plan">
 				<Command __prop_name__="command" name="display3d_init"/>
 			</Display3dInit>
+			<SimPlay name="SimPlay_plan">
+				<Command __prop_name__="command" name="sim_play"/>
+			</SimPlay>
+			<SimReset name="SimReset_plan">
+				<Command __prop_name__="command" name="sim_reset"/>
+			</SimReset>
 		</PlanPoolObject>
 	</PlanRoot>
 	<TransferModelController __prop_name__="model_controller_transfer"/>
@@ -297,27 +303,41 @@
 		<SireProgramWebInterface name="sire_program_websock_interface">
 			<Socket __prop_name__="socket" connect_type="WEB" port="5867"/>
 		</SireProgramWebInterface>
-		<SireHttpInterface name="http_interface" document_root="D:\Documents\code\RobotControllerHMI\client\build" port="8001"/>
+		<SireHttpInterface name="http_interface" document_root="D:\Documents\code\sire\web_interface\build" port="8001"/>
 	</InterfacePoolObject>
 	<SireMiddleware __prop_name__="middleware">
-		<SireSimulator __prop_name__="simulator" dt="0.0001"/>
+		<SimulationLoop __prop_name__="simulator" dt="0.001" realtime_rate="0.5" global_variable_pool="{impact_threshold_insert:0.5,impact_threshold_remove:0.2,shrink_dt:0.00001}">
+			<EventManager __prop_name__="event_manager">
+				<EventHandlerPairPool __prop_name__="event_handler_pair_pool">
+					<EventHandlerIdPair event_id="0" handler_id="0"/>
+					<EventHandlerIdPair event_id="1" handler_id="1"/>
+				</EventHandlerPairPool>
+			</EventManager>
+		</SimulationLoop>
 		<PhysicsEngine __prop_name__="physics_engine" enable_collision_detection="true" enable_contact_solver="true">
 			<CollisionDetection __prop_name__="collision_detection"/>
-			<StiffnessDampingContactSolver __prop_name__="stiffness_damping_contact_solver"/>
+			<ContinuousForceContactSolver __prop_name__="contact_solver" default_k="2.8e8" default_cr="0.5">
+				<MaterialManager default_prop="{k:1.4e8,d:1500,cr:0.2}">
+					<MaterialPairPropPool>
+						<MaterialPairProp first_name="steel" second_name="steel" prop="{k:2.8e8,d:1000,cr:0.2}"/>
+					</MaterialPairPropPool>
+				</MaterialManager>
+			</ContinuousForceContactSolver>
 			<GeometryPoolObject __prop_name__="dynamic_geometry_pool">
-				<MeshCollisionGeometry id="0" part_id="0" is_dynamic="false" contact_prop="{k:2.8e14,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l0.data" scale="{1,1,1}"/>
-				<MeshCollisionGeometry id="1" part_id="1" is_dynamic="true" contact_prop="{k:2.8e14,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l1.data" scale="{1,1,1}"/>
-				<MeshCollisionGeometry id="2" part_id="2" is_dynamic="true" contact_prop="{k:2.8e14,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l2.data" scale="{1,1,1}"/>
-				<MeshCollisionGeometry id="3" part_id="3" is_dynamic="true" contact_prop="{k:2.8e14,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l3.data" scale="{1,1,1}"/>
-				<MeshCollisionGeometry id="4" part_id="4" is_dynamic="true" contact_prop="{k:2.8e14,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l4.data" scale="{1,1,1}"/>
-				<MeshCollisionGeometry id="5" part_id="5" is_dynamic="true" contact_prop="{k:2.8e14,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l5.data" scale="{1,1,1}"/>
-				<MeshCollisionGeometry id="6" part_id="6" is_dynamic="true" contact_prop="{k:2.8e14,d:2000}" pm="{0.0,0.0,1.0,0.393,0.0,1.0,0.0,0.0,-1.0,0.0,0.0,0.642,0.0,0.0,0.0,1.0}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l6.data" scale="{1,1,1}"/>
+				<MeshCollisionGeometry id="0" part_id="0" is_dynamic="false" material="steel" contact_prop="{k:2.8e8,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="./build/robot/geometry/Rokae/XB4/l0.data" scale="{1,1,1}"/>
+				<MeshCollisionGeometry id="1" part_id="1" is_dynamic="true" material="steel" contact_prop="{k:2.8e8,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="./build/robot/geometry/Rokae/XB4/l1.data" scale="{1,1,1}"/>
+				<MeshCollisionGeometry id="2" part_id="2" is_dynamic="true" material="steel" contact_prop="{k:2.8e8,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="./build/robot/geometry/Rokae/XB4/l2.data" scale="{1,1,1}"/>
+				<MeshCollisionGeometry id="3" part_id="3" is_dynamic="true" material="steel" contact_prop="{k:2.8e8,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="./build/robot/geometry/Rokae/XB4/l3.data" scale="{1,1,1}"/>
+				<MeshCollisionGeometry id="4" part_id="4" is_dynamic="true" material="steel" contact_prop="{k:2.8e8,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="./build/robot/geometry/Rokae/XB4/l4.data" scale="{1,1,1}"/>
+				<MeshCollisionGeometry id="5" part_id="5" is_dynamic="true" material="steel" contact_prop="{k:2.8e8,d:2000}" pm="{1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1}" resource_path="./build/robot/geometry/Rokae/XB4/l5.data" scale="{1,1,1}"/>
+				<!-- <MeshCollisionGeometry id="6" part_id="6" is_dynamic="true" material="steel" pm="{0.0,0.0,1.0,0.393,0.0,1.0,0.0,0.0,-1.0,0.0,0.0,0.642,0.0,0.0,0.0,1.0}" resource_path="D:/Documents/code/RobotControllerHMI/client/build/robot/geometry/Rokae/XB4/l6.data" scale="{1,1,1}"/> -->
+				<!-- <SphereCollisionGeometry id="6" part_id="6" is_dynamic="true" material="steel" contact_prop="{k:2.8e8,d:2000}" radius="0.0000001" pm="{0.0,0.0,1.0,0.393,0.0,1.0,0.0,0.0,-1.0,0.0,0.0,0.642,0.0,0.0,0.0,1.0}"/> -->
 			</GeometryPoolObject>
-			<CollisionFilter __prop_name__="collision_filter" filter_state="{1,1,0,0,0,0,0, 1,1,1,0,0,0,0, 0,1,1,1,0,0,0, 0,0,1,1,1,0,0, 0,0,0,1,1,1,0, 0,0,0,0,1,1,1, 0,0,0,0,0,1,1}"/>
+			<CollisionFilter __prop_name__="collision_filter" filter_state="{1,1,1,0,0,0, 1,1,1,0,0,0, 1,1,1,1,0,0, 0,0,1,1,1,0, 0,0,0,1,1,1, 0,0,0,0,1,1, 0,0,0,0,0,1}"/>
 		</PhysicsEngine>
 		<SimulatorModules __prop_name__="simulator_modules">
 			<IntegratorPoolObject __prop_name__="integrator_pool">
-				<ExplicitEulerIntegrator/>
+				<SemiImplicitEulerIntegrator/>
 			</IntegratorPoolObject>
 			<SireSensorPoolObject __prop_name__="sensor_pool"/>
 		</SimulatorModules>

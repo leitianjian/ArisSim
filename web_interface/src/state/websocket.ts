@@ -155,7 +155,14 @@ class Robot {
 
     this.robotWebsocket.onclose = (event) => {
       store.dispatch(updateWebsocketStatus({ websocketConnected: false }));
-      this.connect();
+      setTimeout(() => {
+        this.connect();
+      }, 500);
+      // this.connect();
+    };
+    this.robotWebsocket.onerror = (event) => {
+      console.error('Socket encountered error: ', 'Closing socket');
+      this.robotWebsocket?.close();
     };
   }
 

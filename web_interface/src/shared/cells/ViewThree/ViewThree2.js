@@ -401,7 +401,7 @@ class ViewThree2 extends Component {
     
     if ( time >= this.prevUpdateLocationTime + 500 ) {
       this.setState({lups: Math.round( ( this.updates * 1000 ) / ( time - this.prevUpdateLocationTime ) )});
-      console.log(Math.round( ( this.updates * 1000 ) / ( time - this.prevUpdateLocationTime ) ));
+      // console.log(Math.round( ( this.updates * 1000 ) / ( time - this.prevUpdateLocationTime ) ));
       this.updates = 0;
       this.prevUpdateLocationTime = time;
     }

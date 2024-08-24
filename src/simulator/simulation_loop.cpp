@@ -182,6 +182,13 @@ auto SimulationLoop::start() -> void {
     }
   });
 }
+auto SimulationLoop::isRunning() -> bool {
+  return imp_->is_simulation_running_.load();
+}
+auto SimulationLoop::pause() -> void {
+  imp_->is_simulation_running_.store(false);
+  imp_->simulation_thread.join();
+}
 auto SimulationLoop::createTriggerById(sire::Size trigger_id)
     -> std::unique_ptr<TriggerBase> {
   std::unique_ptr<TriggerBase> new_trigger =
@@ -309,6 +316,9 @@ auto SimulationLoop::setGlobalVariablePool(core::PropMap& pool) -> void {
 }
 auto SimulationLoop::getGlobalVariablePool() const -> const core::PropMap& {
   return imp_->global_variable_pool_;
+}
+auto SimulationLoop::reset() -> void {
+  imp_->contact_pair_manager_.contactPairMap().clear();
 }
 
 ARIS_REGISTRATION {

@@ -42,6 +42,7 @@ struct PhysicsEngine::Imp {
   std::vector<common::PointPairContactInfo> contact_info_;
 
   // Useful pointer and information from outer module
+  std::string initial_model_config_{};
   aris::dynamic::Model* model_ptr_{nullptr};
   aris::core::PointerArray<aris::dynamic::Part, aris::dynamic::Element>*
       part_pool_ptr_{nullptr};
@@ -94,6 +95,7 @@ auto PhysicsEngine::init() -> void {
   // 初始化Model与ControlServer相关的指针
   imp_->model_ptr_ = dynamic_cast<aris::dynamic::Model*>(
       &aris::server::ControlServer::instance().model());
+  saveInitialModel(*imp_->model_ptr_);
   doInit();
 }
 auto PhysicsEngine::initByModel(aris::dynamic::Model* m) -> void {
@@ -402,6 +404,18 @@ auto PhysicsEngine::resetPartContactForce() -> void {
         .setFce(std::array<double, 6>{0, 0, 0, 0, 0, 0}.data());
   }
 }
+auto PhysicsEngine::saveInitialModel(aris::dynamic::Model& model) -> void{
+  imp_->initial_model_config_ = aris::core::toXmlString(model);
+}
+auto PhysicsEngine::resetInitialModel() -> void{
+  aris::core::fromXmlString(*imp_->model_ptr_, imp_->initial_model_config_);
+  imp_->model_ptr_->init();
+  imp_->part_pool_ptr_ = &imp_->model_ptr_->partPool();
+  imp_->part_size_ = imp_->part_pool_ptr_->size();
+  imp_->contact_solver_->init(this);
+  // imp_->model_ptr_->init();
+}
+
 auto PhysicsEngine::cptGlbForceByContactInfo(
     const std::vector<common::PointPairContactInfo>& contact_info) -> bool {
   const sire::Size num_contacts = contact_info.size();
