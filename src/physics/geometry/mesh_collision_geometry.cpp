@@ -56,6 +56,13 @@ auto MeshCollisionGeometry::init() -> void {
   resetCollisionObject(new fcl::CollisionObject(bvh_model, trans));
 }
 ARIS_REGISTRATION {
+  auto setResourcePath = [](MeshCollisionGeometry* geo,
+                            const std::string& path) -> void {
+    geo->meshShape.setResourcePath(path);
+  };
+  auto getResourcePath = [](MeshCollisionGeometry* geo) -> const std::string& {
+    return geo->meshShape.resourcePath();
+  };
   auto getMeshGeometryScale = [](MeshCollisionGeometry* geo) {
     return aris::core::Matrix(1, 3, geo->scale());
   };
@@ -65,6 +72,7 @@ ARIS_REGISTRATION {
   };
   aris::core::class_<MeshCollisionGeometry>("MeshCollisionGeometry")
       .inherit<CollidableGeometry>()
+      .prop("resource_path", &setResourcePath, &getResourcePath)
       .prop("scale", &setMeshGeometryScale, &getMeshGeometryScale);
 }
 }  // namespace sire::physics::geometry

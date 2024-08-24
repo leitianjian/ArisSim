@@ -36,16 +36,15 @@ ARIS_REGISTRATION {
   auto getResourcePath = [](MeshGeometry* geo) -> const std::string& {
     return geo->meshShape.resourcePath();
   };
-  auto setScale = [](MeshGeometry* geo, double scale) -> void {
-    geo->meshShape.setScale(scale);
-  };
-  auto getScale = [](MeshGeometry* geo) -> double {
-    return geo->meshShape.getScale();
-  };
+  // auto setScale = [](MeshGeometry* geo, double scale) -> void {
+  //   geo->meshShape.setScale(scale);
+  // };
+  // auto getScale = [](MeshGeometry* geo) -> double {
+  //   return geo->meshShape.getScale();
+  // };
   aris::core::class_<MeshGeometry>("MeshGeometry")
       .inherit<GeometryOnPart>()
-      .prop("resource_path", &setResourcePath, &getResourcePath)
-      .prop("scale", &setScale, &getScale);
-  ;
+      .prop("resource_path", &setResourcePath, &getResourcePath);
+      // .prop("scale", &setScale, &getScale);
 }
 }  // namespace sire::geometry

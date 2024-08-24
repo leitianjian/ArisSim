@@ -46,7 +46,14 @@ SIRE_DEFINE_MOVE_CTOR_CPP(BoxCollisionGeometry)
 SIRE_DEFINE_JSON_OUTER_TWO(BoxCollisionGeometry)
 
 ARIS_REGISTRATION {
+  auto setSide = [](BoxCollisionGeometry* box, aris::core::Matrix mat) -> void {
+    box->boxShape.setSide(mat.data());
+  };
+  auto getSide = [](BoxCollisionGeometry* box) -> aris::core::Matrix {
+    return aris::core::Matrix(1, 3, box->boxShape.side());
+  };
   aris::core::class_<BoxCollisionGeometry>("BoxCollisionGeometry")
-      .inherit<CollidableGeometry>();
+      .inherit<CollidableGeometry>()
+      .prop("side", &setSide, &getSide);
 }
 }  // namespace sire::physics::geometry

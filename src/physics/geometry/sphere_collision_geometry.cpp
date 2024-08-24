@@ -43,7 +43,15 @@ SphereCollisionGeometry::~SphereCollisionGeometry() = default;
 SIRE_DEFINE_JSON_OUTER_TWO(SphereCollisionGeometry)
 
 ARIS_REGISTRATION {
+  auto getSphereRadius = [](SphereCollisionGeometry* geo) {
+    return geo->sphereShape.radius();
+  };
+  auto setSphereRadius = [](SphereCollisionGeometry* geo,
+                            double radius) {
+    geo->sphereShape.setRadius(radius);
+  };
   aris::core::class_<SphereCollisionGeometry>("SphereCollisionGeometry")
-      .inherit<CollidableGeometry>();
+      .inherit<CollidableGeometry>()
+      .prop("radius", &setSphereRadius, &getSphereRadius);
 }
 }  // namespace sire::physics::geometry
